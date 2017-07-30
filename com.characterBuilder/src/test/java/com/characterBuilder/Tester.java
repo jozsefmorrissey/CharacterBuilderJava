@@ -8,8 +8,4 @@ public class Tester {
 		assert(4 == 4);
 	}
 	
-	@Test
-	public void fail(){
-		assert(3 == 3);
-	}
 }
