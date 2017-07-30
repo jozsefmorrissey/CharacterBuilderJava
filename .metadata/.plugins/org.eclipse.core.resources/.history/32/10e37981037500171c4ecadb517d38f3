@@ -1,0 +1,10 @@
+package com.characterBuilder;
+
+import org.junit.*;
+
+public class Test {
+	@Tester
+	public void test(){
+		assert(4 == 4);
+	}
+}
