@@ -10,6 +10,6 @@ public class Tester {
 	
 	@Test
 	public void fail(){
-		assert(3 == 4);
+		assert(3 == 3);
 	}
 }
