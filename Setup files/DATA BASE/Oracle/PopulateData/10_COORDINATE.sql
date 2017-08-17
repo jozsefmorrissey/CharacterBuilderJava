@@ -1,0 +1,5 @@
+
+--==========================  Coordinate Data  =====================--
+
+INSERT INTO COORDINATE (ID, LONGITUDE, LATITUDE) VALUES (1, 45.00321, -84.24352);
+INSERT INTO COORDINATE (ID, LONGITUDE, LATITUDE) VALUES (2, -134.03245, 38.88832);

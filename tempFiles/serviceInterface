@@ -1,0 +1,6 @@
+public Event getById(long id);
+public void add(Event event) throws EmailAlreadyRegistered;
+public void delete(Event event);
+public void update(Event event);
+public Set<Event> getAll();
+public Event getByEmail(String string);

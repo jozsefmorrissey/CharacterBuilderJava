@@ -1,0 +1,3 @@
+Consider implementaing Aop around all service methods to catch SQLGrammarException which is caused when attempts are made to grab non existant entities or when dependencies are not satisfied
+
+

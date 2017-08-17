@@ -1,0 +1,38 @@
+@Autowired
+private EventSrvc eventSrvc;
+
+public EventCtrl(EventSrvc eventSrvc) {
+  super();
+  this.eventSrvc = eventSrvc;
+}
+
+@PostMapping
+public ResponseEntity<?> addEvent(@RequestBody Event event, HttpSession session) throws EmailAlreadyRegistered {
+  eventSrvc.add(event);
+  return ResponseEntity.ok(null);
+}
+
+@DeleteMapping
+public ResponseEntity<?> deleteEvent(@RequestBody Event event, HttpSession session) {
+  eventSrvc.delete(event);
+  return ResponseEntity.ok(null);
+}
+
+@PutMapping
+public ResponseEntity<Object> updateEvent(@RequestBody Event event, HttpSession session) {
+    //TODO: AOP login varification.
+    eventSrvc.update(event);
+    return ResponseEntity.ok(null);
+}
+
+@GetMapping("/{id}")
+public ResponseEntity<List<Event>> getEvent(@PathVariable long id, HttpSession session) {
+  List<Event> event = new ArrayList<Event>();
+  event.add(eventSrvc.getById(id));
+  return ResponseEntity.ok(event);
+}
+
+@GetMapping("/all")
+public ResponseEntity<List<Event>> getAllEvents(HttpSession session) {
+  return ResponseEntity.ok(eventSrvc.getAll());
+}
