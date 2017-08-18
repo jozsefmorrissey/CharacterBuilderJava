@@ -29,7 +29,8 @@ import com.characterBuilder.services.UserSrvcTest;
 	SkillDescriptionSrvcTest.class,
 	SkillSrvcTest.class,
 	ParticipantSrvcTest.class,
-	LocationSrvcTest.class
+	LocationSrvcTest.class,
+	CoordinateSrvcTest.class
 })
 public class AllTests {
 

@@ -7,7 +7,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.characterBuilder.entities.pureDBEntities.Coordinate;
 import com.characterBuilder.repositories.CoordinateRepo;
 import com.characterBuilder.services.interfaces.CoordinateSrvc;
-import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
 
 @Service
 public class CoordinateSrvcImpl implements CoordinateSrvc {
@@ -23,7 +22,7 @@ public class CoordinateSrvcImpl implements CoordinateSrvc {
 
 	@Override
 	@Transactional
-	public void addCoordinate(Coordinate coordinate) throws ExceedingLimitException {
+	public void addCoordinate(Coordinate coordinate) {
 		coordinateRepo.save(coordinate);
 	}
 
