@@ -1,6 +1,6 @@
 package com.characterBuilder.throwable.exceptions;
 
-public class EmailAlreadyRegistered extends Exception {
+public class EmailAlreadyRegisteredException extends Exception {
 
 	/**
 	 * 

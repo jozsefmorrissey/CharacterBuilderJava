@@ -15,7 +15,7 @@ import com.characterBuilder.entities.pureDBEntities.EventTime;
 import com.characterBuilder.repositories.EventRepo;
 import com.characterBuilder.services.interfaces.DescriptionSrvc;
 import com.characterBuilder.services.interfaces.EventSrvc;
-import com.characterBuilder.throwable.exceptions.EmailAlreadyRegistered;
+import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 @Service
 public class EventSrvcImpl implements EventSrvc {
@@ -30,10 +30,10 @@ public class EventSrvcImpl implements EventSrvc {
 
     @Override
     @Transactional
-    public void add(Event event) throws EmailAlreadyRegistered {
+    public void add(Event event) throws EmailAlreadyRegisteredException {
     	Event dne = eventRepo.getOne(event.getId());
     	if(dne != null)
-    		throw new EmailAlreadyRegistered();
+    		throw new EmailAlreadyRegisteredException();
 
     	eventRepo.saveAndFlush(event);
     }

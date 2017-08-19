@@ -1,5 +1,7 @@
 package com.characterBuilder.services;
 
+import static org.junit.Assert.fail;
+
 import java.util.Set;
 
 import org.junit.Before;
@@ -13,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.Permission;
 import com.characterBuilder.services.interfaces.UserSrvc;
-import com.characterBuilder.throwable.exceptions.EmailAlreadyRegistered;
+import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -62,7 +64,7 @@ public class UserSrvcTest {
 		try {
 			userSrvc.add(user);
 			assert(true);
-		} catch (EmailAlreadyRegistered e) {
+		} catch (EmailAlreadyRegisteredException e) {
 			assert(false);
 		}
 		userSrvc.delete(user);
@@ -75,8 +77,8 @@ public class UserSrvcTest {
 		addUserSuccessfully();
 		try {
 			userSrvc.add(user);
-			assert(false);
-		} catch (EmailAlreadyRegistered e) {
+			fail("Add should throw EmailAlreadyRegisteredException");
+		} catch (EmailAlreadyRegisteredException e) {
 			assert(true);
 		}
 		userSrvc.delete(user);
@@ -121,7 +123,7 @@ public class UserSrvcTest {
 	private void addUserSuccessfully() {
 		try {
 			userSrvc.add(user);
-		} catch (EmailAlreadyRegistered e) {
+		} catch (EmailAlreadyRegisteredException e) {
 			assert(false);
 		}
 	}

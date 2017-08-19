@@ -10,14 +10,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class Skill {
+public class Skill implements Comparable<Skill> {
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SKILL_ID_SEQ")
 	@SequenceGenerator(name = "SKILL_ID_SEQ", sequenceName = "SKILL_ID_SEQ")
 	long id;
 	
-	@Column
+	@Column(unique = true)
 	String name;
 	
 	public Skill() {
@@ -75,5 +75,10 @@ public class Skill {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	@Override
+	public int compareTo(Skill o) {
+		return name.compareTo(o.name);
 	}
 }

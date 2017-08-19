@@ -27,11 +27,9 @@ public class SkillMap {
     @JoinColumn(name="SKILL_ID", nullable=false, updatable=false)
 	private Skill skill;
 	
-//	@OneToOne
-//	@JoinColumn(name = "EVENT_ID")
-// TODO: fix this;
-	@Transient
-	private Event eventId;
+	@OneToOne
+	@JoinColumn(name = "EVENT_ID")
+	private Event event;
 	
 	@OneToOne
 	@JoinColumn(name = "ATTRIBUTER_ID")
@@ -52,13 +50,25 @@ public class SkillMap {
 		super();
 	}
 
+	public SkillMap(long id, Skill skill, Event event, User attributer, User reciever, Short value,
+			String description) {
+		super();
+		this.id = id;
+		this.skill = skill;
+		this.event = event;
+		this.attributer = attributer;
+		this.reciever = reciever;
+		this.value = value;
+		this.description = description;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((attributer == null) ? 0 : attributer.hashCode());
 		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + ((eventId == null) ? 0 : eventId.hashCode());
+		result = prime * result + ((event == null) ? 0 : event.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((reciever == null) ? 0 : reciever.hashCode());
 		result = prime * result + ((skill == null) ? 0 : skill.hashCode());
@@ -85,10 +95,10 @@ public class SkillMap {
 				return false;
 		} else if (!description.equals(other.description))
 			return false;
-		if (eventId == null) {
-			if (other.eventId != null)
+		if (event == null) {
+			if (other.event != null)
 				return false;
-		} else if (!eventId.equals(other.eventId))
+		} else if (!event.equals(other.event))
 			return false;
 		if (id != other.id)
 			return false;
@@ -112,7 +122,7 @@ public class SkillMap {
 
 	@Override
 	public String toString() {
-		return "SkillMap [id=" + id + ", skill=" + skill + ", eventId=" + eventId + ", attributer=" + attributer
+		return "SkillMap [id=" + id + ", skill=" + skill + ", event=" + event + ", attributer=" + attributer
 				+ ", reciever=" + reciever + ", value=" + value + ", description=" + description + "]";
 	}
 
@@ -132,12 +142,12 @@ public class SkillMap {
 		this.skill = skill;
 	}
 
-	public Event getEventId() {
-		return eventId;
+	public Event getEvent() {
+		return event;
 	}
 
-	public void setEventId(Event eventId) {
-		this.eventId = eventId;
+	public void setEvent(Event event) {
+		this.event = event;
 	}
 
 	public User getAttributer() {

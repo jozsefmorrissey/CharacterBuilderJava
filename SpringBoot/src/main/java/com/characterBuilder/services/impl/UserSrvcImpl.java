@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import com.characterBuilder.entities.User;
 import com.characterBuilder.repositories.UserRepo;
 import com.characterBuilder.services.interfaces.UserSrvc;
-import com.characterBuilder.throwable.exceptions.EmailAlreadyRegistered;
+import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 @Service
 public class UserSrvcImpl implements UserSrvc {
@@ -27,10 +27,10 @@ public class UserSrvcImpl implements UserSrvc {
 
     @Override
     @Transactional
-    public void add(User user) throws EmailAlreadyRegistered {
+    public void add(User user) throws EmailAlreadyRegisteredException {
     	User dne = userRepo.getByEmail(user.getEmail());
     	if(dne != null)
-    		throw new EmailAlreadyRegistered();
+    		throw new EmailAlreadyRegisteredException();
 
     	userRepo.saveAndFlush(user);
     }

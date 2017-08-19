@@ -15,7 +15,7 @@ import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.EventImage;
 import com.characterBuilder.entities.pureDBEntities.EventTime;
 import com.characterBuilder.services.interfaces.EventSrvc;
-import com.characterBuilder.throwable.exceptions.EmailAlreadyRegistered;
+import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -45,7 +45,7 @@ public class EventSrvcTest {
 	public void testGetters() {
 		try {
 			eventSrvc.add(event);
-		} catch (EmailAlreadyRegistered e) {
+		} catch (EmailAlreadyRegisteredException e) {
 			assert(false);
 		}
 		testGetAllEvents(2);
@@ -76,7 +76,7 @@ public class EventSrvcTest {
 		try {
 			eventSrvc.add(event);
 			assert(true);
-		} catch (EmailAlreadyRegistered e) {
+		} catch (EmailAlreadyRegisteredException e) {
 			assert(false);
 		}
 		eventSrvc.delete(event);
@@ -88,13 +88,13 @@ public class EventSrvcTest {
 		try {
 			eventSrvc.add(event);
 			assert(true);
-		} catch (EmailAlreadyRegistered e) {
+		} catch (EmailAlreadyRegisteredException e) {
 			assert(false);
 		}
 		try {
 			eventSrvc.add(event);
 			assert(false);
-		} catch (EmailAlreadyRegistered e) {
+		} catch (EmailAlreadyRegisteredException e) {
 			assert(true);
 		}
 	}

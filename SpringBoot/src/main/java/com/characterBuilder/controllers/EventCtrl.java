@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.characterBuilder.entities.Event;
 import com.characterBuilder.services.interfaces.EventSrvc;
-import com.characterBuilder.throwable.exceptions.EmailAlreadyRegistered;
+import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 @RestController
 @RequestMapping("event")
@@ -33,7 +33,7 @@ public class EventCtrl {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> addEvent(@RequestBody Event event, HttpSession session) throws EmailAlreadyRegistered {
+	public ResponseEntity<?> addEvent(@RequestBody Event event, HttpSession session) throws EmailAlreadyRegisteredException {
 	  eventSrvc.add(event);
 	  return ResponseEntity.ok(null);
 	}

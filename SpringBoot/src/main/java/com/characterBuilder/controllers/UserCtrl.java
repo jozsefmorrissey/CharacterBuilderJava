@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.characterBuilder.entities.User;
 import com.characterBuilder.services.interfaces.UserSrvc;
-import com.characterBuilder.throwable.exceptions.EmailAlreadyRegistered;
+import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 @RestController
 @RequestMapping("user")
@@ -34,7 +34,7 @@ public class UserCtrl {
 	}
 
 	@PostMapping
-	public ResponseEntity<?> addUser(@RequestBody User user, HttpSession session) throws EmailAlreadyRegistered {
+	public ResponseEntity<?> addUser(@RequestBody User user, HttpSession session) throws EmailAlreadyRegisteredException {
 		userSrvc.add(user);
 		return ResponseEntity.ok(null);
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import com.characterBuilder.entities.pureDBEntities.Skill;
 
 public interface SkillSrvc {
+	public Skill getByName(String name);
 	public Skill getById(long id);
 	public List<Skill> getAllSkills();
 	
