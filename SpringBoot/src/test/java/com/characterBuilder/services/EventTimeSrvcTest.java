@@ -1,7 +1,6 @@
 package com.characterBuilder.services;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -20,6 +19,7 @@ import com.characterBuilder.entities.pureDBEntities.EventTime;
 import com.characterBuilder.services.interfaces.EventTimeSrvc;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
 import com.characterBuilder.util.PropertiesUtil;
+import com.characterBuilder.util.StringUtil;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,9 +44,7 @@ public class EventTimeSrvcTest {
 	public void testGetTimes() {
 		List<EventTime> eventTime = eventTimeSrvc.getTimesByEvent(event1);
 		String str = "2002-09-10T14:10:10.123";
-		str = str.replace('T', ' ');
-		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"); 
-		LocalDateTime dateTime = LocalDateTime.parse(str, formatter);
+		LocalDateTime dateTime = StringUtil.localDateTimeConverter(str);
 		assertEquals(eventTime.get(0), dateTime);
 	}
 	

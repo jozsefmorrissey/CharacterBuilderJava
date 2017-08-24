@@ -12,6 +12,8 @@ import com.characterBuilder.services.EventTimeSrvcTest;
 import com.characterBuilder.services.LocationSrvcTest;
 import com.characterBuilder.services.ParticipantSrvcTest;
 import com.characterBuilder.services.PermissionSrvcTest;
+import com.characterBuilder.services.ProfileLinkSrvcTest;
+import com.characterBuilder.services.RatingSrvcTest;
 import com.characterBuilder.services.SkillDescriptionSrvcTest;
 import com.characterBuilder.services.SkillSrvcTest;
 import com.characterBuilder.services.UserSrvcTest;
@@ -30,7 +32,9 @@ import com.characterBuilder.services.UserSrvcTest;
 	SkillSrvcTest.class,
 	ParticipantSrvcTest.class,
 	LocationSrvcTest.class,
-	CoordinateSrvcTest.class
+	CoordinateSrvcTest.class,
+	ProfileLinkSrvcTest.class,
+	RatingSrvcTest.class
 })
 public class AllTests {
 

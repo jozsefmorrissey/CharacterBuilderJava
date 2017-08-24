@@ -33,6 +33,8 @@ GRANT CREATE SESSION TO characterBuilderTest;
 GRANT CREATE TABLE TO characterBuilderTest;
 GRANT CREATE VIEW TO characterBuilderTest;
 GRANT CREATE MATERIALIZED VIEW TO characterBuilderTest;
+GRANT DEBUG CONNECT SESSION TO characterBuilderTest;
+GRANT DEBUG ANY PROCEDURE TO characterBuilderTest;
 GRANT create session to characterBuilderTest;
 ALTER USER characterBuilderTest QUOTA 10m ON users;
 

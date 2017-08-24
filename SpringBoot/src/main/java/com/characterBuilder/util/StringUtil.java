@@ -1,5 +1,7 @@
 package com.characterBuilder.util;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class StringUtil {
@@ -17,5 +19,11 @@ public class StringUtil {
 		}
 		String[] strArr = new String[0];
 		return strs.toArray(strArr);
+	}
+	
+	public static LocalDateTime localDateTimeConverter(String tsString) {
+		tsString = tsString.replace('T', ' ');
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"); 
+		return LocalDateTime.parse(tsString, formatter);
 	}
 }

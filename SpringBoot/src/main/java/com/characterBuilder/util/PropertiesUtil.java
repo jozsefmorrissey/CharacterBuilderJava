@@ -68,4 +68,9 @@ public class PropertiesUtil {
 		initialize();
 		return Integer.parseInt(propUtil.prop.getProperty("MaxParticipants"));	
 	}
+	
+	public static int getDaysBetweenUserRatings() {
+		initialize();
+		return Integer.parseInt(propUtil.prop.getProperty("DaysBetweenUserRatings"));	
+	}
 }
