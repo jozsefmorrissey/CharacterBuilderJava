@@ -1,4 +1,4 @@
-package com.characterBuilder.services;
+package com.characterBuilder.services.simple;
 
 import static org.junit.Assert.fail;
 
@@ -10,7 +10,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.Permission;
@@ -41,7 +40,6 @@ public class UserSrvcTest {
 
 
 	@Test
-	@Transactional
 	public void testUpdate() {
 		addUserSuccessfully();
 		
@@ -56,11 +54,11 @@ public class UserSrvcTest {
 
 
 	@Test
-	@Transactional
 	public void testDelete() {
 		addUserSuccessfully();
 		
 		userSrvc.delete(user);
+		user.setId(0);
 		try {
 			userSrvc.add(user);
 			assert(true);
@@ -72,7 +70,6 @@ public class UserSrvcTest {
 
 
 	@Test
-	@Transactional
 	public void testAdd() {
 		addUserSuccessfully();
 		try {
@@ -87,7 +84,6 @@ public class UserSrvcTest {
 
 
 	@Test
-	@Transactional
 	public void testGetUser() {
 		addUserSuccessfully();
 		User ret = userSrvc.getById(user.getId());
@@ -96,7 +92,6 @@ public class UserSrvcTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testGetByEmail() {
 		addUserSuccessfully();
 		user = userSrvc.getByEmail(user.getEmail());

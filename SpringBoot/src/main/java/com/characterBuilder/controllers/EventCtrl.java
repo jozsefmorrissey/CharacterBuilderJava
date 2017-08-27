@@ -59,7 +59,7 @@ public class EventCtrl {
 	}
 
 	@GetMapping("/all")
-	public ResponseEntity<Set<Event>> getAllEvents(HttpSession session) {
+	public ResponseEntity<List<Event>> getAllEvents(HttpSession session) {
 	  return ResponseEntity.ok(eventSrvc.getAll());
 	}
 }

@@ -1,4 +1,4 @@
-package com.characterBuilder.services;
+package com.characterBuilder.services.simple;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.characterBuilder.entities.Event;
 import com.characterBuilder.entities.pureDBEntities.EventTime;
@@ -49,7 +48,6 @@ public class EventTimeSrvcTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testAddTime() throws ExceedingLimitException {
 		EventTime et = GetRandomEventTime();
 		eventTimeSrvc.addTime(et);
@@ -60,9 +58,7 @@ public class EventTimeSrvcTest {
 		eventTimeSrvc.deleteTime(et);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
-	@Transactional
 	public void testAddTimes() {
 		List<EventTime> eventTimes = (List<EventTime>) GetRandomEventTimes();
 		try {
@@ -92,6 +88,7 @@ public class EventTimeSrvcTest {
 		} catch (ExceedingLimitException e) {
 			assert(true);
 		}
+		eventTimeSrvc.deleteAllTimes(new Event(eventId, null, null, dbTimes, null, null));
 	}
 
 	private void assertEquals(EventTime eventTime, LocalDateTime ltd) {

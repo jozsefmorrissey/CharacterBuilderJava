@@ -1,11 +1,10 @@
-package com.characterBuilder.services;
+package com.characterBuilder.services.simple;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.characterBuilder.services.interfaces.DescriptionSrvc;
 import com.characterBuilder.services.interfaces.UserSrvc;
@@ -21,7 +20,6 @@ public class DescriptionSrvcTest {
 	UserSrvc userSrvc;
 	
 	@Test
-	@Transactional
 	public void testGetEventDesc (){
 		assert(descSrvc.getEventDescription(2).contains("Bodega!"));
 		assert(descSrvc.getAllEventDesc().size() == 2);
@@ -32,7 +30,6 @@ public class DescriptionSrvcTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testGetSkillDesc () {
 		assert(descSrvc.getAllSkillDesc().size() == 2);
 		assert(descSrvc.getSkillDescription(2).equals(

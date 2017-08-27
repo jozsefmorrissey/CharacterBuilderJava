@@ -1,6 +1,6 @@
 package com.characterBuilder.entities;
 
-import java.util.Set;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,22 +8,23 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.hibernate.annotations.Proxy;
-
 import com.characterBuilder.entities.pureDBEntities.EventImage;
 import com.characterBuilder.entities.pureDBEntities.EventTime;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+/**
+ * TODO: fix join relations
+ * @author jozse
+ *
+ */
 @Entity
 @Table
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-@Proxy(lazy = false)
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Event {
 	@Id
 	@Column(name = "ID")
@@ -36,13 +37,15 @@ public class Event {
 	
 	@OneToOne
 	@JoinColumn(name = "POSTER_ID")
-	private User posterId;
+	private User poster;
 	
-	@OneToMany
-	private Set<EventTime> times;
+	// TODO: hibernate this have to rework EventTime obj and srvc test
+	@Transient
+	private List<EventTime> times;
 	
-	@OneToMany
-	private Set<EventImage> images;
+	// TODO: hibernate this have to rework EventImage obj and srvc test
+	@Transient
+	private List<EventImage> images;
 	
 	// This is to be retrieved separately.
 	@Transient
@@ -52,12 +55,12 @@ public class Event {
 		super();
 	}
 
-	public Event(long id, String title, User posterId, Set<EventTime> times, Set<EventImage> images,
+	public Event(long id, String title, User posterId, List<EventTime> times, List<EventImage> images,
 			String description) {
 		super();
 		this.id = id;
 		this.title = title;
-		this.posterId = posterId;
+		this.poster = posterId;
 		this.times = times;
 		this.images = images;
 		Description = description;
@@ -72,12 +75,12 @@ public class Event {
 		result = prime * result + ((Description == null) ? 0 : Description.hashCode());
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((images == null) ? 0 : images.hashCode());
-		result = prime * result + ((posterId == null) ? 0 : posterId.hashCode());
+		result = prime * result + ((poster == null) ? 0 : poster.hashCode());
 		result = prime * result + ((times == null) ? 0 : times.hashCode());
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
-
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -99,10 +102,10 @@ public class Event {
 				return false;
 		} else if (!images.equals(other.images))
 			return false;
-		if (posterId == null) {
-			if (other.posterId != null)
+		if (poster == null) {
+			if (other.poster != null)
 				return false;
-		} else if (!posterId.equals(other.posterId))
+		} else if (!poster.equals(other.poster))
 			return false;
 		if (times == null) {
 			if (other.times != null)
@@ -119,7 +122,7 @@ public class Event {
 
 	@Override
 	public String toString() {
-		return "Event [id=" + id + ", title=" + title + ", posterId=" + posterId + ", times=" + times + ", images="
+		return "Event [id=" + id + ", title=" + title + ", posterId=" + poster + ", times=" + times + ", images="
 				+ images + ", Description=" + Description + "]";
 	}
 
@@ -140,26 +143,26 @@ public class Event {
 	}
 
 	public User getPosterId() {
-		return posterId;
+		return poster;
 	}
 
 	public void setPosterId(User posterId) {
-		this.posterId = posterId;
+		this.poster = posterId;
 	}
 
-	public Set<EventTime> getTimes() {
+	public List<EventTime> getTimes() {
 		return times;
 	}
 
-	public void setTimes(Set<EventTime> times) {
+	public void setTimes(List<EventTime> times) {
 		this.times = times;
 	}
 
-	public Set<EventImage> getImages() {
+	public List<EventImage> getImages() {
 		return images;
 	}
 
-	public void setImages(Set<EventImage> images) {
+	public void setImages(List<EventImage> images) {
 		this.images = images;
 	}
 

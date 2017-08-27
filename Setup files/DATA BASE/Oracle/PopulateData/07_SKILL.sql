@@ -1,9 +1,6 @@
 
 --==========================  Skill Data  =====================--
 
-INSERT INTO SKILL (ID, NAME) VALUES (1, 'Hard Working');
-INSERT INTO SKILL (ID, NAME) VALUES (2, 'ANALITICAL');
-
 INSERT INTO SKILL (ID,NAME) VALUES (3,'eget, volutpat ornare,');
 INSERT INTO SKILL (ID,NAME) VALUES (4,'dignissim. Maecenas ornare');
 INSERT INTO SKILL (ID,NAME) VALUES (5,'venenatis vel, faucibus');

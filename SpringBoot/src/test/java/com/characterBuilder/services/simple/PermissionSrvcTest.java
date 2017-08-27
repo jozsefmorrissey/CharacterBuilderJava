@@ -1,4 +1,4 @@
-package com.characterBuilder.services;
+package com.characterBuilder.services.simple;
 
 import java.util.List;
 

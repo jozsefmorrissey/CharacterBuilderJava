@@ -1,11 +1,6 @@
 
 --==========================  ProfileLine Data  =====================--
 
-INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (1, 1, 4, 4, 0, 'Contributer = 4');
-INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (2,15, 1, 9, 1, 'Contributer = 9');
-INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (3,14, 13, 8, 1, 'Contributer = 8');
-INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (4,14, 15, 3, 1, 'Contributer = 3');
-
 INSERT INTO PROFILE_LINK (ID, USER_ID_1,USER_ID_2,CREATOR_ID,IS_GOOD,REASON) VALUES (5,478,567,955,0,'quis arcu vel quam dignissim pharetra. Nam ac nulla. In tincidunt');
 INSERT INTO PROFILE_LINK (ID, USER_ID_1,USER_ID_2,CREATOR_ID,IS_GOOD,REASON) VALUES (6,496,641,608,0,'velit eu sem. Pellentesque ut ipsum ac mi eleifend');
 INSERT INTO PROFILE_LINK (ID, USER_ID_1,USER_ID_2,CREATOR_ID,IS_GOOD,REASON) VALUES (7,666,319,797,0,'vulputate, lacus. Cras interdum. Nunc sollicitudin commodo ipsum. Suspendisse non leo. Vivamus nibh dolor, nonummy ac, feugiat non, lobortis quis,');

@@ -1,4 +1,4 @@
-package com.characterBuilder.services;
+package com.characterBuilder.services.simple;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -70,7 +70,6 @@ public class EventDescriptionSrvcTest {
 	 * @param description
 	 */
 	@Test
-	@Transactional
 	public void testAdd() {
 	  try {
 
@@ -95,6 +94,7 @@ public class EventDescriptionSrvcTest {
 			assert(false);
 	  }
 	  checkDescription(event, description);
+	  testDelete(event);
 	}
 	
 	/**
@@ -102,7 +102,6 @@ public class EventDescriptionSrvcTest {
 	 * @param event
 	 */
 	@Test
-	@Transactional
 	public void tooLongTest(){
 		try {
 			    eventDescSrvc.add(event, description + '!');
@@ -122,7 +121,6 @@ public class EventDescriptionSrvcTest {
 	 * existing one.
 	 */
 	@Test
-	@Transactional
 	public void overWritingDataTest(){
 		Event event = new Event();
 		event.setId(2);

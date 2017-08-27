@@ -1,4 +1,4 @@
-package com.characterBuilder.services;
+package com.characterBuilder.services.simple;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.characterBuilder.entities.SkillMap;
 import com.characterBuilder.services.interfaces.SkillDescriptionSrvc;
@@ -31,12 +30,6 @@ public class SkillDescriptionSrvcTest {
 		description = buildMaxDescription();
 	}
 	
-	/**
-	 * Tests to make sure descriptions are updated correctly.
-	 * @Transactional will cause update type tests to fail.
-	 * 
-	 * IMPORTANT! if this test fails check the integrity of the dataBase.
-	 */
 	@Test
 	public void testUpdate() {
 	  try {
@@ -69,7 +62,6 @@ public class SkillDescriptionSrvcTest {
 	 * @param description
 	 */
 	@Test
-	@Transactional
 	public void testAdd() {
 	  try {
 
@@ -95,6 +87,7 @@ public class SkillDescriptionSrvcTest {
 	  assert(false);
 	  }
 	  checkDescription(skillMap, description);
+	  testDelete(skillMap);
 	}
 
 	/**
@@ -102,7 +95,6 @@ public class SkillDescriptionSrvcTest {
 	 * @param skillMap
 	 */
 	@Test
-	@Transactional
 	public void tooLongTest(){
 	  try {
 	        skillDescSrvc.add(skillMap, description + '!');
@@ -121,7 +113,6 @@ public class SkillDescriptionSrvcTest {
 	 * existing one.
 	 */
 	@Test
-	@Transactional
 	public void overWritingDataTest(){
 	  SkillMap skill = new SkillMap();
 	  skill.setId(1);

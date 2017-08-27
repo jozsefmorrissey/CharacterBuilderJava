@@ -23,9 +23,8 @@ import com.characterBuilder.services.simple.UserSrvcTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	SimpleTests.class,
-	ComplexTests.class
+	ParticipantSrvcTest.class
 })
-public class AllTests {
+public class ComplexTests {
 
 }

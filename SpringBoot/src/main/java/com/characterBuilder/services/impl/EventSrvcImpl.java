@@ -1,8 +1,6 @@
 package com.characterBuilder.services.impl;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.transaction.Transactional;
 
@@ -10,10 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.characterBuilder.entities.Event;
-import com.characterBuilder.entities.pureDBEntities.EventImage;
-import com.characterBuilder.entities.pureDBEntities.EventTime;
+import com.characterBuilder.entities.User;
 import com.characterBuilder.repositories.EventRepo;
-import com.characterBuilder.services.interfaces.DescriptionSrvc;
 import com.characterBuilder.services.interfaces.EventSrvc;
 import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
@@ -49,21 +45,16 @@ public class EventSrvcImpl implements EventSrvc {
     }
 
     @Override
-    public Set<Event> getAll() {
+    @Transactional
+    public List<Event> getAll() {
     	List<Event> repo = eventRepo.findAll();
-    	HashSet<Event> set = new HashSet<>(repo);
-        return set;
+        return repo;
     }
-
-	@Override
-	public Set<EventTime> getEventTimes(long id) {
-		return null;//new HashSet(timeRepo.findAll());
-	}
-
-	@Override
-	public Set<EventImage> getEventImages(long id) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    
+    @Override
+    @Transactional
+    public List<Event> getAllByPoster(User poster) {
+    	return eventRepo.findByPoster(poster);
+    }
 }
 

@@ -1,4 +1,4 @@
-package com.characterBuilder.services;
+package com.characterBuilder.services.simple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +12,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.characterBuilder.entities.Event;
 import com.characterBuilder.entities.pureDBEntities.EventImage;
@@ -47,7 +46,6 @@ public class EventImageSrvcTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testAddImage(){
 		// Test add functionality
 		try {
@@ -82,7 +80,6 @@ public class EventImageSrvcTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testAddImages() {
 		List<EventImage> images = (List<EventImage>) this.createMaxCollection();
 		
@@ -114,7 +111,6 @@ public class EventImageSrvcTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testUpdateImage() {
 		// Add image
 		this.image.setId(0);
@@ -176,7 +172,6 @@ public class EventImageSrvcTest {
 	}
 	
 	@Test
-	@Transactional
 	public void testUpdateAllImages() {
 		// Update empty data.
 		List<EventImage> images1 = (List<EventImage>) createMaxCollection();

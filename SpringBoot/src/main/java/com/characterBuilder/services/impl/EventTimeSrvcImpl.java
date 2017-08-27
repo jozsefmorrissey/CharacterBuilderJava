@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.characterBuilder.entities.Event;
 import com.characterBuilder.entities.pureDBEntities.EventTime;
@@ -19,7 +20,6 @@ public class EventTimeSrvcImpl implements EventTimeSrvc{
 
 	@Autowired
 	EventTimeRepo eventTimeRepo;
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<EventTime> getTimesByEvent(Event event) {
 		List<EventTime> eventTimes = eventTimeRepo.getByEventId(event.getId());
@@ -52,6 +52,7 @@ public class EventTimeSrvcImpl implements EventTimeSrvc{
 	}
 
 	@Override
+	@Transactional
 	public void deleteAllTimes(Event event) {
 		eventTimeRepo.deleteByEventId(event.getId());
 	}

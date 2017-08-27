@@ -18,6 +18,12 @@ import com.characterBuilder.entities.pureDBEntities.Permission;
 import com.characterBuilder.util.ImageUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+
+/**
+ * TODO: Implement a description(About Me) field
+ * @author jozse
+ *
+ */
 @Entity
 @Table(name = "CB_USER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

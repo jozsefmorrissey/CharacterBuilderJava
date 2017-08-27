@@ -15,7 +15,7 @@ import com.characterBuilder.util.LocalDateTimeConverter;
 
 @Entity
 @Table(name = "EVENT_TIME")
-public class EventTime implements Comparable {
+public class EventTime implements Comparable<EventTime> {
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EVENT_TIME_ID_SEQ")
@@ -101,7 +101,7 @@ public class EventTime implements Comparable {
 	}
 
 	@Override
-	public int compareTo(Object arg0) {
+	public int compareTo(EventTime arg0) {
 		if(arg0.getClass() != this.getClass())
 			return 1;
 			

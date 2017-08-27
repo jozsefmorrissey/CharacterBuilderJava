@@ -1,10 +1,9 @@
 package com.characterBuilder.services.interfaces;
 
-import java.util.Set;
+import java.util.List;
 
 import com.characterBuilder.entities.Event;
-import com.characterBuilder.entities.pureDBEntities.EventImage;
-import com.characterBuilder.entities.pureDBEntities.EventTime;
+import com.characterBuilder.entities.User;
 import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 public interface EventSrvc {
@@ -12,8 +11,7 @@ public interface EventSrvc {
 	public void add(Event event) throws EmailAlreadyRegisteredException;
 	public void delete(Event event);
 	public void update(Event event);
-	public Set<Event> getAll();
-	
-	public Set<EventTime> getEventTimes(long id);
-	public Set<EventImage> getEventImages(long id);
+	public List<Event> getAll();
+	List<Event> getAllByPoster(User poster);
+
 }

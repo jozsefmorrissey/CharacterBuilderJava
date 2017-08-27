@@ -1,4 +1,4 @@
-package com.characterBuilder.services;
+package com.characterBuilder.services.complex;
 
 import static org.junit.Assert.fail;
 

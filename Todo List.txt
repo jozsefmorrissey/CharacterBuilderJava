@@ -7,8 +7,10 @@ SQL
   - Messages
   - Ratings
 
+  ?Virtual table for category organization?
+
   Ensure generated data exists for all appropriate tables.
-  
+
 Java
 
   Objects
