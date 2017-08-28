@@ -104,9 +104,9 @@ This script consists of the data base setup with enough data to run the SimpleTe
 ##### OracleDBPopulateData.sql
 This script is a combanation of many files within 'Setup Files/DataBase/Oracle/' includeing the scripts within the PopulateData folder.
 
-    To rebuild the script, in git bash navigate to 'Setup Files/DataBase/' and run the command...
+To rebuild the script, in git bash navigate to 'Setup Files/DataBase/' and run the command...
 
-cat OracleDB/*.sql OracleDB/PopulateData/*.sql > OracleDBPopulateData.sql
+    cat OracleDB/*.sql OracleDB/PopulateData/*.sql > OracleDBPopulateData.sql
 
 This database setup will fully populate data.
 
