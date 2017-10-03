@@ -1,5 +1,6 @@
 package com.characterBuilder.entities;
 
+import javax.annotation.ManagedBean;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,10 +11,15 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.ReadOnlyProperty;
+import org.springframework.web.context.annotation.ApplicationScope;
+
+import lombok.Data;
 
 @Entity
 @Table
+@ManagedBean
+@ApplicationScope
+@Data
 public class Participant implements Comparable<Participant>{
 	@Id
 	@Column(name = "ID")
@@ -36,66 +42,6 @@ public class Participant implements Comparable<Participant>{
 		super();
 		this.id = id;
 		this.eventTimeId = eventTimeId;
-		this.participant = participant;
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (eventTimeId ^ (eventTimeId >>> 32));
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + ((participant == null) ? 0 : participant.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Participant other = (Participant) obj;
-		if (eventTimeId != other.eventTimeId)
-			return false;
-		if (id != other.id)
-			return false;
-		if (participant == null) {
-			if (other.participant != null)
-				return false;
-		} else if (!participant.equals(other.participant))
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Participant [id=" + id + ", eventTimeId=" + eventTimeId + ", participant=" + participant + "]";
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getEventTimeId() {
-		return eventTimeId;
-	}
-
-	public void setEventTimeId(long eventTimeId) {
-		this.eventTimeId = eventTimeId;
-	}
-
-	public User getParticipant() {
-		return participant;
-	}
-
-	public void setParticipant(User participant) {
 		this.participant = participant;
 	}
 

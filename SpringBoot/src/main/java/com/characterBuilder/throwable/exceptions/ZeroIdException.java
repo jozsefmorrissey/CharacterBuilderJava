@@ -1,4 +1,4 @@
-package com.characterBuilder.services.impl;
+package com.characterBuilder.throwable.exceptions;
 
 public class ZeroIdException extends Exception {
 

@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.List;
 
 import com.characterBuilder.entities.Participant;
-import com.characterBuilder.services.impl.ZeroIdException;
 import com.characterBuilder.throwable.exceptions.AddingConflictingIds;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
+import com.characterBuilder.throwable.exceptions.ZeroIdException;
 
 public interface ParticipantSrvc {
 	public List<Participant> getParticipants(long eventTimeId);

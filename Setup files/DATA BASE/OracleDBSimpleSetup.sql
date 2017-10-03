@@ -99,6 +99,27 @@ CREATE OR REPLACE TYPE PROFILE_LINK_TYPE AS OBJECT (
     REASON VARCHAR(256)
 );
 /
+
+CREATE OR REPLACE TYPE EVENT_MESSAGE_TYPE AS OBJECT (
+  ID NUMBER,
+  SENDER_ID NUMBER,
+  EVENT_ID NUMBER,
+  RECIPIENT_ID NUMBER,
+  MESSAGE VARCHAR2(256),
+  TIME_STAMP TIMESTAMP
+);
+/
+
+CREATE OR REPLACE TYPE EVENT_TIME_MESSAGE_TYPE AS OBJECT (
+  ID NUMBER,
+  SENDER_ID NUMBER,
+  EVENT_TIME_ID NUMBER,
+  RECIPIENT_ID NUMBER,
+  MESSAGE VARCHAR2(256),
+  TIME_STAMP TIMESTAMP
+);
+/
+
 --------------- TABLE TYPES -----------------
 CREATE OR REPLACE TYPE DESCRIPTION_TABLE IS TABLE OF DESCRIPTION_TYPE;
 /
@@ -113,6 +134,12 @@ CREATE OR REPLACE TYPE NUMBER_ARRAY IS TABLE OF NUMBER;
 /
 
 CREATE OR REPLACE TYPE PROFILE_LINK_TABLE IS TABLE OF PROFILE_LINK_TYPE;
+/
+
+CREATE OR REPLACE TYPE EVENT_MESSAGE_TABLE IS TABLE OF EVENT_MESSAGE_TYPE;
+/
+
+CREATE OR REPLACE TYPE EVENT_TIME_MESSAGE_TABLE IS TABLE OF EVENT_TIME_MESSAGE_TYPE;
 /
 
 --==========================  TABLES  =====================--
@@ -134,6 +161,22 @@ CREATE TABLE CB_USER (
   CONSTRAINT FK_USER_PERMISSION FOREIGN KEY (PERMISSION_ID) REFERENCES PERMISSION(ID)
 );
 
+CREATE TABLE CATEGORY(
+  ID NUMBER PRIMARY KEY,
+  NAME VARCHAR2(32),
+  POST_DESCRIPTION VARCHAR2(256),
+  ATTEND_DESCRIPTION VARCHAR2(256)
+);
+
+CREATE TABLE CATEGORY_PREFERENCE(
+  ID NUMBER,
+  USER_ID NUMBER,
+  CATEGORY_ID NUMBER,
+  POSITION NUMBER(2),
+  CONSTRAINT FK_CAT_PREF_CAT FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(ID),
+  CONSTRAINT FK_CAT_PREF_USER FOREIGN KEY (USER_ID) REFERENCES CB_USER(ID)
+);
+
 CREATE TABLE COORDINATE (
   ID NUMBER PRIMARY KEY,
   LONGITUDE NUMBER(8,5),
@@ -153,7 +196,10 @@ CREATE TABLE LOCATION (
 CREATE TABLE EVENT (
   ID NUMBER PRIMARY KEY,
   TITLE VARCHAR2(128),
-  POSTER_ID NUMBER
+  CATEGORY_ID NUMBER,
+  POSTER_ID NUMBER,
+  CONSTRAINT FK_EVENT_USER FOREIGN KEY (POSTER_ID) REFERENCES CB_USER(ID),
+  CONSTRAINT FK_EVENT_CATEGORY FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(ID)
 );
 
 CREATE TABLE EVENT_IMAGE (
@@ -231,7 +277,7 @@ CREATE TABLE PROFILE_LINK (
 );
 
 CREATE TABLE RATING (
-  ID NUMBER,
+  ID NUMBER PRIMARY KEY,
   ATTRIBUTER_ID NUMBER,
   RECIEVER_ID NUMBER,
   DESCRIPTION VARCHAR2(256),
@@ -244,27 +290,45 @@ CREATE TABLE RATING (
 );
 
 CREATE TABLE EVENT_MESSAGE(
-  ID NUMBER,
+  ID NUMBER PRIMARY KEY,
   SENDER_ID NUMBER,
   EVENT_ID NUMBER,
+  RECIPIENT_ID NUMBER,  -- This should never be set
   MESSAGE VARCHAR2(256),
   TIME_STAMP TIMESTAMP,
   CONSTRAINT FK_EVENT_MSG FOREIGN KEY (EVENT_ID) REFERENCES EVENT(ID),
   CONSTRAINT FK_SEND_E_MSG FOREIGN KEY (SENDER_ID) REFERENCES CB_USER(ID)
 );
 
+CREATE TABLE EVENT_MESSAGE_RECIPIENT(
+  ID NUMBER PRIMARY KEY,
+  RECIEVER_ID NUMBER,
+  EVENT_MSG_ID NUMBER,
+  CONSTRAINT FK_EVENT_MSG_REC_USER FOREIGN KEY (RECIEVER_ID) REFERENCES CB_USER(ID),
+  CONSTRAINT FK_EVENT_MSG_REC_EVENT FOREIGN KEY (EVENT_MSG_ID) REFERENCES EVENT_MESSAGE(ID)
+);
+
 CREATE TABLE EVENT_TIME_MESSAGE(
-  ID NUMBER,
+  ID NUMBER PRIMARY KEY,
   SENDER_ID NUMBER,
   EVENT_TIME_ID NUMBER,
+  RECIPIENT_ID NUMBER,  -- This should never be set
   MESSAGE VARCHAR2(256),
   TIME_STAMP TIMESTAMP,
   CONSTRAINT FK_EVENT_TIME_ET_MESSAGE FOREIGN KEY (EVENT_TIME_ID) REFERENCES EVENT_TIME(ID),
   CONSTRAINT FK_SEND_ET_MSG_USER FOREIGN KEY (SENDER_ID) REFERENCES CB_USER(ID)
 );
 
+CREATE TABLE EVENT_TIME_MESSAGE_RECIPIENT(
+  ID NUMBER PRIMARY KEY,
+  RECIEVER_ID NUMBER,
+  EVENT_TIME_MSG_ID NUMBER,
+  CONSTRAINT FK_EVTM_MSG_REC_USER FOREIGN KEY (RECIEVER_ID) REFERENCES CB_USER(ID),
+  CONSTRAINT FK_EVTM_MSG_REC_EVENT FOREIGN KEY (EVENT_TIME_MSG_ID) REFERENCES EVENT_TIME_MESSAGE(ID)
+);
+
 CREATE TABLE MESSAGE(
-  ID NUMBER,
+  ID NUMBER PRIMARY KEY,
   SENDER_ID NUMBER,
   RECIEVER_ID NUMBER,
   MESSAGE VARCHAR2(256),
@@ -277,6 +341,7 @@ CREATE TABLE USER_FLAG(
   ID NUMBER,
   BEARER_ID NUMBER,
   TARGET_ID NUMBER,
+  REASON VARCHAR2(256),
   CONSTRAINT FK_U_FLAG_BEARER_USER FOREIGN KEY (BEARER_ID) REFERENCES CB_USER(ID),
   CONSTRAINT FK_U_FLAG_TARGET_USER FOREIGN KEY (TARGET_ID) REFERENCES CB_USER(ID)
 );
@@ -285,24 +350,9 @@ CREATE TABLE EVENT_FLAG(
   ID NUMBER,
   BEARER_ID NUMBER,
   TARGET_ID NUMBER,
+  REASON VARCHAR2(256),
   CONSTRAINT FK_E_FLAG_BEARER_USER FOREIGN KEY (BEARER_ID) REFERENCES CB_USER(ID),
   CONSTRAINT FK_E_FLAG_TARGET_EVENT FOREIGN KEY (TARGET_ID) REFERENCES EVENT(ID)
-);
-
-CREATE TABLE CATEGORY(
-  ID NUMBER PRIMARY KEY,
-  NAME VARCHAR2(32),
-  POST_DESCRIPTION VARCHAR2(256),
-  ATTEND_DESCRIPTION VARCHAR2(256)
-);
-
-CREATE TABLE CATEGORY_PREFERENCE(
-  ID NUMBER,
-  USER_ID NUMBER,
-  CATEGORY_ID NUMBER,
-  POSITION NUMBER(2),
-  CONSTRAINT FK_CAT_PREF_CAT FOREIGN KEY (CATEGORY_ID) REFERENCES CATEGORY(ID),
-  CONSTRAINT FK_CAT_PREF_USER FOREIGN KEY (USER_ID) REFERENCES CB_USER(ID)
 );
 
 --==========================  FUNCTIONS  =====================--
@@ -537,13 +587,113 @@ BEGIN
 END;
 /
 
+-- This function finds all event messages relavant to a
+-- given user.
+create or replace FUNCTION FIND_EVENT_MESSAGES(U_ID NUMBER)
+  RETURN EVENT_MESSAGE_TABLE
+  IS
+  LIST_LINKS EVENT_MESSAGE_TABLE;
+
+  RET_VAL EVENT_MESSAGE_TABLE := EVENT_MESSAGE_TABLE();
+  BEGIN
+    SELECT * BULK COLLECT INTO LIST_LINKS FROM
+        (Select EVENT_MESSAGE_TYPE(evm.ID, evm.sender_id, evm.event_id, emr.reciever_id, evm.message, evm.time_stamp)
+        from event e
+            join event_time et on et.EVENT_ID = e.ID
+            join event_message evm on e.id = evm.EVENT_ID
+            full join event_message_recipient emr on emr.event_msg_id = evm.ID
+            join PARTICIPANT p on p.EVENT_TIME_ID = et.id
+            where evm.SENDER_ID = U_ID and p.USER_ID = U_ID       -- If it was sent by user
+                or (evm.SENDER_ID = e.POSTER_ID and
+                    U_ID = p.USER_ID and emr.Reciever_id is null)     -- If message is blasted out from poster to everyone
+                or emr.RECIEVER_ID = U_ID and p.USER_ID = U_ID    -- If message was sent directly to user
+                or U_ID = e.POSTER_ID and p.user_id = U_ID);      -- If user is poster
+    RETURN LIST_LINKS;
+END;
+/
+
+-- This function finds all event_time messages relavant to
+-- a given user.
+create or replace FUNCTION FIND_EVENT_TIME_MESSAGES(U_ID NUMBER)
+  RETURN EVENT_TIME_MESSAGE_TABLE
+  IS
+  LIST_LINKS EVENT_TIME_MESSAGE_TABLE;
+
+  RET_VAL EVENT_TIME_MESSAGE_TABLE := EVENT_TIME_MESSAGE_TABLE();
+  BEGIN
+    SELECT * BULK COLLECT INTO LIST_LINKS FROM
+        (Select EVENT_TIME_MESSAGE_TYPE(evtm.ID, evtm.sender_id, evtm.event_time_id, etmr.reciever_id, evtm.message, evtm.time_stamp)
+            from event e
+            join event_time et on et.EVENT_ID = e.id
+            join event_time_message evtm on et.id = evtm.EVENT_TIME_ID
+            full join event_time_message_recipient etmr on etmr.event_time_msg_id = evtm.ID
+            join participant p on p.event_time_id = et.id
+            where ((evtm.SENDER_ID = U_ID or etmr.RECIEVER_ID = U_ID)
+                    and p.user_id = U_ID)                           -- Message was sent to or sent by user
+                or (evtm.SENDER_ID = e.POSTER_ID and
+                    etmr.RECIEVER_ID is null and p.user_id = U_ID)  -- Message blasted to everyone
+                or U_ID = e.POSTER_ID and p.user_id = U_ID);           -- if user is poster
+    RETURN LIST_LINKS;
+END;
+/
+
 --==========================  VIEWS  =====================--
+
+/*  The following description tables concatinate all descriptions
+    held in there respective tables into a single string.
+
+    See funtions for details.
+ */
 
 CREATE VIEW EVENT_DESCRIPTION_TBL AS
     SELECT * FROM TABLE(CONCAT_EVENT_DESC) WHERE TEXT IS NOT NULL;
 
 CREATE VIEW SKILL_DESCRIPTION_TBL AS
     SELECT * FROM TABLE(CONCAT_SKILL_DESC) WHERE TEXT IS NOT NULL;
+
+
+/*  This following message views combine the information from several tables
+    to produce an easily queriable view that will retrieve only the relavant
+    messages for a given user and event time. The query below retrieves
+    all relavant messages for user with id 3 and event_time with id 1.
+
+    (note: If RECIEVER_ID = 0 it is a braodcast to all participants)
+
+    SELECT * FROM EVENT_TIME_MESSAGE_VIEW WHERE
+      EVENT_TIME_ID = 1 AND
+        ((SENDER_ID = POSTER_ID  AND RECIEVER_ID = 0)
+          OR RECIEVER_ID = 3 OR SENDER_ID = 3);
+ */
+CREATE VIEW EVENT_TIME_MESSAGE_VIEW AS
+SELECT
+    ETM.ID,
+    ETM.SENDER_ID,
+    ETM.EVENT_TIME_ID,
+    ETM.MESSAGE,
+    ETM.TIME_STAMP,
+    COALESCE(ETMR.RECIEVER_ID, 0) AS RECIEVER_ID,
+    COALESCE(ETMR.EVENT_TIME_MSG_ID, 0) AS EVENT_TIME_MSG_ID,
+    EV.POSTER_ID
+FROM EVENT_TIME_MESSAGE ETM
+FULL JOIN EVENT_TIME_MESSAGE_RECIPIENT ETMR ON ETM.ID = ETMR.EVENT_TIME_MSG_ID
+JOIN EVENT_TIME ET ON ET.ID = ETM.EVENT_TIME_ID
+JOIN EVENT EV ON  EV.ID = ET.EVENT_ID
+ORDER BY ETM.TIME_STAMP;
+
+CREATE OR REPLACE VIEW EVENT_MESSAGE_VIEW AS
+SELECT
+    EVM.ID,
+    EVM.SENDER_ID,
+    EVM.MESSAGE,
+    EVM.EVENT_ID,
+    EVM.TIME_STAMP,
+    COALESCE(EVMR.RECIEVER_ID, 0) AS RECIEVER_ID,
+    COALESCE(EVMR.EVENT_MSG_ID, 0) AS EVENT_MSG_ID,
+    EV.POSTER_ID
+FROM EVENT_MESSAGE EVM
+FULL JOIN EVENT_MESSAGE_RECIPIENT EVMR ON EVM.ID = EVMR.EVENT_MSG_ID
+JOIN EVENT EV ON  EV.ID = EVM.EVENT_ID
+ORDER BY EVM.TIME_STAMP;
 
 --==========================  JUnit Test Data  =====================--
 
@@ -566,13 +716,46 @@ INSERT INTO CB_USER (ID,NAME,EMAIL,PHONE_NUMBER,PERMISSION_ID,LAST_LOCATION_ID,P
 INSERT INTO CB_USER (ID,NAME,EMAIL,PHONE_NUMBER,PERMISSION_ID,LAST_LOCATION_ID,PASSWORD) VALUES (14,'Emerald Horn','nibh.enim.gravida@CuraeDonectincidunt.com',10058874795,2,0,'sit amet, faucibus ut,');
 INSERT INTO CB_USER (ID,NAME,EMAIL,PHONE_NUMBER,PERMISSION_ID,LAST_LOCATION_ID,PASSWORD) VALUES (15,'Reese Jimenez','pellentesque.a@duinec.ca',17261370057,2,0,'dolor. Fusce mi lorem,');
 
-INSERT INTO EVENT (ID, TITLE, POSTER_ID) VALUES (1, 'Debate', 1);
-INSERT INTO EVENT (ID, TITLE, POSTER_ID) VALUES (2, 'Code Chalange', 1);
-INSERT INTO EVENT (ID, TITLE, POSTER_ID) VALUES (3, 'Dance Off(Pants Off)', 1);
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (1,'Volunteer',
+  'Volunteer activities are intended to be unpaid, but make up for it by providing experiance and in some cases a sence of purpose.',
+  'Posting in the volunteer category portarys this event/activaty as promoting the intrests of the comunity.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (2,'Charity',
+  'Charity activities are supposed to help the disadvantaged: sick, poor, elderly, diabled. It can be gradifying work, try to keep in mind a spotter is better than superman.',
+  'The charity category is reserved for helping disadvantaged members of your community. i.e. sick, poor, elderly, disabled...');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (3,'Educational',
+  'Educational activities should be similar to traditional schooling, a relative subject matter expert leading, with frequent interuptions by the audience',
+  'Educational posts are ment for knowledgeable individuals who can benifit and learn from an interactive audience.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (4,'Trade',
+  'Trade posts should entail a skill focus. Should feel like a job only more forgiving and patient',
+  'To post in the trade section you should have activities that develope specific skills. Participants should build, organize or operate somthing.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (5,'Social',
+  'Social activiaties are for exploring new ideas or general disscusions over broad topics',
+  'If you are posting in social, you should not desire to be the center of attention. It should be a free formed interaction, a sterio typical wine and cheese party.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (6,'Active',
+  'Your mind is an amazing tool, but dont neglect your body. The active category is for sports and other group physical activities.',
+  'People expect to be active. Sports, outdoor activities, anything that gets your heart rate up!');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (7,'Distress',
+  'People posting in destress have found themselves in a poor situation and need help. The idea is that these people have almost always been self sufficient, its just a run of bad luck.',
+  'Only post in the destress category if you are in an atypically bad situation. i.e. you lost the job you have had for 10 years, not I lost my job i have only been employed 2 of the last 10 years.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (8,'Siminar',
+  'People posting in the Siminar category are subject matter experts (Maybe just self proclaimed). These people should be capable of covering a topic thouroughly with no feedback from the audience.',
+  'If you are posing in the siminar category you need to be extremely knowledgeable on the topics to cover. If you have not ingaged in edjucation or social events of these topics, we strongly recommend you try them first.');
+
+INSERT INTO EVENT (ID, TITLE, CATEGORY_ID, POSTER_ID) VALUES (1, 'Debate', 1, 1);
+INSERT INTO EVENT (ID, TITLE, CATEGORY_ID, POSTER_ID) VALUES (2, 'Code Chalange', 2, 1);
+INSERT INTO EVENT (ID, TITLE, CATEGORY_ID, POSTER_ID) VALUES (3, 'Dance Off(Pants Off)', 3, 1);
+INSERT INTO EVENT (ID, TITLE, CATEGORY_ID, POSTER_ID) VALUES (4, 'Stranger Danger Convention', 7, 10);
 
 INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (1, 1, TO_TIMESTAMP('10-SEP-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
 INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (2, 1, TO_TIMESTAMP('10-OCT-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
 INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (3, 1, TO_TIMESTAMP('10-NOV-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (4, 4, TO_TIMESTAMP('10-SEP-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (5, 4, TO_TIMESTAMP('10-OCT-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (6, 4, TO_TIMESTAMP('10-NOV-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (7, 4, TO_TIMESTAMP('10-SEP-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (8, 4, TO_TIMESTAMP('10-OCT-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (9, 4, TO_TIMESTAMP('10-NOV-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
 
 INSERT INTO EVENT_DESCRIPTION (ID, EVENT_ID, DESCRIPTION, POSITION) VALUES (1, 1, 'This event is the bomb digity! ', 1);
 INSERT INTO EVENT_DESCRIPTION (ID, EVENT_ID, DESCRIPTION, POSITION) VALUES (2, 1, 'As proof of that chech out the next sentance. ', 2);
@@ -627,6 +810,13 @@ INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (4, 1, 4);
 INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (5, 1, 5);
 INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (6, 1, 6);
 
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (7, 4, 10);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (8, 4, 11);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (9, 4, 12);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (10, 4, 13);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (11, 4, 14);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (12, 4, 15);
+
 INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (1, 1, 4, 4, 0, 'Contributer = 4');
 INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (2,15, 1, 9, 1, 'Contributer = 9');
 INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (3,14, 13, 8, 1, 'Contributer = 8');
@@ -647,27 +837,49 @@ INSERT INTO RATING
     VALUES (3, 4, 1, 'I like chicken I like liver...', TO_TIMESTAMP('10-NOV-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF')
     , 9, 1);
 
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (1,'Volunteer',
-    'Volunteer activities are intended to be unpaid, but make up for it by providing experiance and in some cases a sence of purpose.',
-    'Posting in the volunteer category portarys this event/activaty as promoting the intrests of the comunity.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (2,'Charity',
-    'Charity activities are supposed to help the disadvantaged: sick, poor, elderly, diabled. It can be gradifying work, try to keep in mind a spotter is better than superman.',
-    'The charity category is reserved for helping disadvantaged members of your community. i.e. sick, poor, elderly, disabled...');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (3,'Educational',
-    'Educational activities should be similar to traditional schooling, a relative subject matter expert leading, with frequent interuptions by the audience',
-    'Educational posts are ment for knowledgeable individuals who can benifit and learn from an interactive audience.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (4,'Trade',
-    'Trade posts should entail a skill focus. Should feel like a job only more forgiving and patient',
-    'To post in the trade section you should have activities that develope specific skills. Participants should build, organize or operate somthing.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (5,'Social',
-    'Social activiaties are for exploring new ideas or general disscusions over broad topics',
-    'If you are posting in social, you should not desire to be the center of attention. It should be a free formed interaction, a sterio typical wine and cheese party.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (6,'Active',
-    'Your mind is an amazing tool, but dont neglect your body. The active category is for sports and other group physical activities.',
-    'People expect to be active. Sports, outdoor activities, anything that gets your heart rate up!');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (7,'Distress',
-    'People posting in destress have found themselves in a poor situation and need help. The idea is that these people have almost always been self sufficient, its just a run of bad luck.',
-    'Only post in the destress category if you are in an atypically bad situation. i.e. you lost the job you have had for 10 years, not I lost my job i have only been employed 2 of the last 10 years.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (8,'Siminar',
-    'People posting in the Siminar category are subject matter experts (Maybe just self proclaimed). These people should be capable of covering a topic thouroughly with no feedback from the audience.',
-    'If you are posing in the siminar category you need to be extremely knowledgeable on the topics to cover. If you have not ingaged in edjucation or social events of these topics, we strongly recommend you try them first.');
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (1, 1, 1, 'Welcome All!',TO_TIMESTAMP('10-AUG-1914:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (2, 1, 1, 'Punch and Pie!',TO_TIMESTAMP('11-AUG-1916:23:50.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (3, 2, 1, 'Great to be here',TO_TIMESTAMP('10-AUG-1917:33:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (4, 3, 1, 'Why should I come?',TO_TIMESTAMP('11-AUG-1916:11:36.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (5, 1, 1, 'Punch and Pie will be served!',TO_TIMESTAMP('11-AUG-1916:24:12.123000','DD-MON-RRHH24:MI:SS.FF'));
+
+INSERT INTO EVENT_TIME_MESSAGE_RECIPIENT (ID, RECIEVER_ID, EVENT_TIME_MSG_ID) VALUES (1, 3, 2);
+
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (1, 1, 1, 'Welcome All!',TO_TIMESTAMP('10-AUG-1914:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (2, 1, 1, 'Punch and Pie!',TO_TIMESTAMP('11-AUG-1916:23:50.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (3, 2, 1, 'Great to be here',TO_TIMESTAMP('10-AUG-1917:33:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (4, 3, 1, 'Why should I come?',TO_TIMESTAMP('11-AUG-1916:11:36.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (5, 1, 1, 'Punch and Pie will be served!',TO_TIMESTAMP('11-AUG-1916:24:12.123000','DD-MON-RRHH24:MI:SS.FF'));
+
+INSERT INTO EVENT_MESSAGE_RECIPIENT (ID, RECIEVER_ID, EVENT_MSG_ID) VALUES (1, 3, 2);
+
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (1, 'Can you believe it?', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (2, 'What?', 2, 1,
+  TO_TIMESTAMP('10-AUG-1914:11:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (5, 'Depends if this goes any where or is a big flop. This could be the only conversation that ever happens.', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:13:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (12, 'But the dates are all wrong...', 2, 1,
+  TO_TIMESTAMP('10-AUG-1914:14:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (7, 'Shut up the dates dont matter the time is what is important. Besides time stamps in sql are gay.', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:15:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (3, 'This is the first conversation to be added to my application.', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:11:12.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (13, 'You mother fucker', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:22:11.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (9, 'The sad thing is that your not real and Im taking to myself.', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:17:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (10, 'Your moms not real lolz', 2, 1,
+  TO_TIMESTAMP('10-AUG-1914:18:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (14, 'I dont even know what lolz is supposed to mean. Is it just a pussy attempt to use lol without being called gay?', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:19:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (6, 'There you go again using the word gay, why dont you expand your vocabulary so that you can articulate your thoughts better.', 2, 1,
+  TO_TIMESTAMP('10-AUG-1914:20:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (15, 'Why dont you fuck off this conversation is over!', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:21:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+  INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (4, 'Is that a big deal?', 2, 1,
+    TO_TIMESTAMP('10-AUG-1914:12:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+  INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (8, 'I find the word gay offensive.', 2, 1,
+    TO_TIMESTAMP('10-AUG-1914:16:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+  INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (11, 'Fine your being gay anyway.', 2, 1,
+    TO_TIMESTAMP('10-AUG-1914:22:10.123000','DD-MON-RRHH24:MI:SS.FF'));

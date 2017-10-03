@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
+import com.characterBuilder.services.complex.ParticipantSrvcTest;
 import com.characterBuilder.services.simple.CategorySrvcTest;
 import com.characterBuilder.services.simple.CoordinateSrvcTest;
 import com.characterBuilder.services.simple.DescriptionSrvcTest;
@@ -22,26 +23,8 @@ import com.characterBuilder.services.simple.UserSrvcTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({ 
-	ApplicationTests.class, 
-	DescriptionSrvcTest.class,
-	EventDescriptionSrvcTest.class,
-	UserSrvcTest.class,
-	EventImageSrvcTest.class,
-	EventTimeSrvcTest.class,
-	CoordinateSrvcTest.class,
-	PermissionSrvcTest.class,
-	SkillDescriptionSrvcTest.class,
-	SkillSrvcTest.class,
-	LocationSrvcTest.class,
-	CoordinateSrvcTest.class,
-	ProfileLinkSrvcTest.class,
-	RatingSrvcTest.class,
-	CategorySrvcTest.class,
-	EventSrvcTest.class,
-	SkillMapSrvcTest.class
+	ParticipantSrvcTest.class
 })
-//@RunWith(WildcardPatternSuite.class)
-//@SuiteClasses({"**/*Test.class", "!gui/**"})
-public class SimpleTests {
+public class PopulatedDataSrvTests {
 
 }

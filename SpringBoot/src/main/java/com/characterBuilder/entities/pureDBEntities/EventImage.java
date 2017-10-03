@@ -1,8 +1,8 @@
 package com.characterBuilder.entities.pureDBEntities;
 
-import java.util.Arrays;
 import java.util.Comparator;
 
+import javax.annotation.ManagedBean;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +11,15 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.web.context.annotation.ApplicationScope;
+
+import lombok.Data;
+
 @Entity
 @Table(name = "EVENT_IMAGE")
+@ManagedBean
+@ApplicationScope
+@Data
 public class EventImage implements Comparable<Object>, Comparator<Object>{
 	@Id
 	@Column(name = "ID")
@@ -20,7 +27,7 @@ public class EventImage implements Comparable<Object>, Comparator<Object>{
 	@SequenceGenerator(name = "EVENT_IMAGE_ID_SEQ", sequenceName = "EVENT_IMAGE_ID_SEQ")
 	long id;
 	
-	@Column(name = "EVENT_ID")
+	@Column
 	long eventId;
 	
 	@Column
@@ -45,75 +52,6 @@ public class EventImage implements Comparable<Object>, Comparator<Object>{
 		this.position = position;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (eventId ^ (eventId >>> 32));
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + Arrays.hashCode(photo);
-		result = prime * result + position;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EventImage other = (EventImage) obj;
-		if (eventId != other.eventId)
-			return false;
-		if (id != other.id)
-			return false;
-		if (!Arrays.equals(photo, other.photo))
-			return false;
-		if (position != other.position)
-			return false;
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "EventImage [id=" + id + ", eventId=" + eventId + ", photo=" + Arrays.toString(photo) + ", position="
-				+ position + "]";
-	}
-
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	public long getEventId() {
-		return eventId;
-	}
-
-	public void setEventId(long eventId) {
-		this.eventId = eventId;
-	}
-
-	public byte[] getPhoto() {
-		return photo;
-	}
-
-	public void setPhoto(byte[] photo) {
-		this.photo = photo;
-	}
-
-	public int getPosition() {
-		return position;
-	}
-
-	public void setPosition(int position) {
-		this.position = position;
-	}
-	
 	/**
 	 * Order by position
 	 */

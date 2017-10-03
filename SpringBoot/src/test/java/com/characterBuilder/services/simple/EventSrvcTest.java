@@ -29,7 +29,7 @@ public class EventSrvcTest {
 	private long id;
 	private Event event;
 	private User poster;
-	private String[] titles = new String[]{"Debate", "Code Chalange", "Dance Off(Pants Off)"};
+	private String[] titles = new String[]{"Debate", "Code Chalange", "Dance Off(Pants Off)", "Stranger Danger Convention"};
 	private List<Event> events = new ArrayList<Event>();
 	
 	@Before

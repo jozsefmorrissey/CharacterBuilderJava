@@ -47,7 +47,7 @@ public class RatingSrvcImpl implements RatingSrvc {
 			LocalDateTime now = LocalDateTime.now();
 			rating.setDateTime(now);
 			LocalDateTime mostRecent = ratings.get(0).getDateTime();
-			int daysBetweenRatings = PropertiesUtil.getDaysBetweenUserRatings();
+			int daysBetweenRatings = PropertiesUtil.daysBetweenUserRatingsMin();
 			LocalDateTime allowedDate = mostRecent.plusDays(daysBetweenRatings);
 			if(ratings.size() == 0 || now.compareTo(allowedDate) >= 0)
 				ratingRepo.save(rating);

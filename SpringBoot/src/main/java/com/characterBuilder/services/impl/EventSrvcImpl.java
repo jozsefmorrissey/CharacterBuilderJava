@@ -20,6 +20,7 @@ public class EventSrvcImpl implements EventSrvc {
     private EventRepo eventRepo;
 
     @Override
+    @Transactional
     public Event getById(long id) {
         return eventRepo.getOne(id);
     }

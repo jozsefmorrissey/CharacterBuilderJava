@@ -98,7 +98,7 @@ public class EventTimeSrvcTest {
 	
 	private Collection<EventTime> GetRandomEventTimes() {
 		Collection<EventTime> times = new ArrayList<EventTime>();
-		int max = PropertiesUtil.getMaxEventTimeCount();
+		int max = PropertiesUtil.eventTimeCountMax();
 		for(int count = 0; count < max; count++) {
 			times.add(GetRandomEventTime());
 		}

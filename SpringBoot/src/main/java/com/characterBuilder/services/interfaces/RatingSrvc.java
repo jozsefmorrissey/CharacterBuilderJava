@@ -9,7 +9,6 @@ import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.Rating;
 import com.characterBuilder.throwable.exceptions.TooCloseException;
 
-@Service
 public interface RatingSrvc {
 	public List<Rating> getByReciever(User reciever);
 	public List<Rating> getByAttributer(User attributer);

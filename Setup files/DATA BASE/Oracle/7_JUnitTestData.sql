@@ -20,13 +20,46 @@ INSERT INTO CB_USER (ID,NAME,EMAIL,PHONE_NUMBER,PERMISSION_ID,LAST_LOCATION_ID,P
 INSERT INTO CB_USER (ID,NAME,EMAIL,PHONE_NUMBER,PERMISSION_ID,LAST_LOCATION_ID,PASSWORD) VALUES (14,'Emerald Horn','nibh.enim.gravida@CuraeDonectincidunt.com',10058874795,2,0,'sit amet, faucibus ut,');
 INSERT INTO CB_USER (ID,NAME,EMAIL,PHONE_NUMBER,PERMISSION_ID,LAST_LOCATION_ID,PASSWORD) VALUES (15,'Reese Jimenez','pellentesque.a@duinec.ca',17261370057,2,0,'dolor. Fusce mi lorem,');
 
-INSERT INTO EVENT (ID, TITLE, POSTER_ID) VALUES (1, 'Debate', 1);
-INSERT INTO EVENT (ID, TITLE, POSTER_ID) VALUES (2, 'Code Chalange', 1);
-INSERT INTO EVENT (ID, TITLE, POSTER_ID) VALUES (3, 'Dance Off(Pants Off)', 1);
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (1,'Volunteer',
+  'Volunteer activities are intended to be unpaid, but make up for it by providing experiance and in some cases a sence of purpose.',
+  'Posting in the volunteer category portarys this event/activaty as promoting the intrests of the comunity.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (2,'Charity',
+  'Charity activities are supposed to help the disadvantaged: sick, poor, elderly, diabled. It can be gradifying work, try to keep in mind a spotter is better than superman.',
+  'The charity category is reserved for helping disadvantaged members of your community. i.e. sick, poor, elderly, disabled...');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (3,'Educational',
+  'Educational activities should be similar to traditional schooling, a relative subject matter expert leading, with frequent interuptions by the audience',
+  'Educational posts are ment for knowledgeable individuals who can benifit and learn from an interactive audience.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (4,'Trade',
+  'Trade posts should entail a skill focus. Should feel like a job only more forgiving and patient',
+  'To post in the trade section you should have activities that develope specific skills. Participants should build, organize or operate somthing.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (5,'Social',
+  'Social activiaties are for exploring new ideas or general disscusions over broad topics',
+  'If you are posting in social, you should not desire to be the center of attention. It should be a free formed interaction, a sterio typical wine and cheese party.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (6,'Active',
+  'Your mind is an amazing tool, but dont neglect your body. The active category is for sports and other group physical activities.',
+  'People expect to be active. Sports, outdoor activities, anything that gets your heart rate up!');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (7,'Distress',
+  'People posting in destress have found themselves in a poor situation and need help. The idea is that these people have almost always been self sufficient, its just a run of bad luck.',
+  'Only post in the destress category if you are in an atypically bad situation. i.e. you lost the job you have had for 10 years, not I lost my job i have only been employed 2 of the last 10 years.');
+INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (8,'Siminar',
+  'People posting in the Siminar category are subject matter experts (Maybe just self proclaimed). These people should be capable of covering a topic thouroughly with no feedback from the audience.',
+  'If you are posing in the siminar category you need to be extremely knowledgeable on the topics to cover. If you have not ingaged in edjucation or social events of these topics, we strongly recommend you try them first.');
+
+INSERT INTO EVENT (ID, TITLE, CATEGORY_ID, POSTER_ID) VALUES (1, 'Debate', 1, 1);
+INSERT INTO EVENT (ID, TITLE, CATEGORY_ID, POSTER_ID) VALUES (2, 'Code Chalange', 2, 1);
+INSERT INTO EVENT (ID, TITLE, CATEGORY_ID, POSTER_ID) VALUES (3, 'Dance Off(Pants Off)', 3, 1);
+INSERT INTO EVENT (ID, TITLE, CATEGORY_ID, POSTER_ID) VALUES (4, 'Stranger Danger Convention', 7, 10);
 
 INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (1, 1, TO_TIMESTAMP('10-SEP-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
 INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (2, 1, TO_TIMESTAMP('10-OCT-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
 INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (3, 1, TO_TIMESTAMP('10-NOV-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (4, 4, TO_TIMESTAMP('10-SEP-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (5, 4, TO_TIMESTAMP('10-OCT-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (6, 4, TO_TIMESTAMP('10-NOV-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (7, 4, TO_TIMESTAMP('10-SEP-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (8, 4, TO_TIMESTAMP('10-OCT-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME (ID, EVENT_ID, TIME_STAMP) VALUES (9, 4, TO_TIMESTAMP('10-NOV-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
 
 INSERT INTO EVENT_DESCRIPTION (ID, EVENT_ID, DESCRIPTION, POSITION) VALUES (1, 1, 'This event is the bomb digity! ', 1);
 INSERT INTO EVENT_DESCRIPTION (ID, EVENT_ID, DESCRIPTION, POSITION) VALUES (2, 1, 'As proof of that chech out the next sentance. ', 2);
@@ -81,6 +114,13 @@ INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (4, 1, 4);
 INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (5, 1, 5);
 INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (6, 1, 6);
 
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (7, 4, 10);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (8, 4, 11);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (9, 4, 12);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (10, 4, 13);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (11, 4, 14);
+INSERT INTO PARTICIPANT (ID, EVENT_TIME_ID, USER_ID) VALUES (12, 4, 15);
+
 INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (1, 1, 4, 4, 0, 'Contributer = 4');
 INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (2,15, 1, 9, 1, 'Contributer = 9');
 INSERT INTO PROFILE_LINK (ID, USER_ID_1, USER_ID_2, CREATOR_ID, IS_GOOD, REASON) VALUES (3,14, 13, 8, 1, 'Contributer = 8');
@@ -101,27 +141,49 @@ INSERT INTO RATING
     VALUES (3, 4, 1, 'I like chicken I like liver...', TO_TIMESTAMP('10-NOV-0214:10:10.123000','DD-MON-RRHH24:MI:SS.FF')
     , 9, 1);
 
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (1,'Volunteer',
-    'Volunteer activities are intended to be unpaid, but make up for it by providing experiance and in some cases a sence of purpose.',
-    'Posting in the volunteer category portarys this event/activaty as promoting the intrests of the comunity.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (2,'Charity',
-    'Charity activities are supposed to help the disadvantaged: sick, poor, elderly, diabled. It can be gradifying work, try to keep in mind a spotter is better than superman.',
-    'The charity category is reserved for helping disadvantaged members of your community. i.e. sick, poor, elderly, disabled...');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (3,'Educational',
-    'Educational activities should be similar to traditional schooling, a relative subject matter expert leading, with frequent interuptions by the audience',
-    'Educational posts are ment for knowledgeable individuals who can benifit and learn from an interactive audience.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (4,'Trade',
-    'Trade posts should entail a skill focus. Should feel like a job only more forgiving and patient',
-    'To post in the trade section you should have activities that develope specific skills. Participants should build, organize or operate somthing.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (5,'Social',
-    'Social activiaties are for exploring new ideas or general disscusions over broad topics',
-    'If you are posting in social, you should not desire to be the center of attention. It should be a free formed interaction, a sterio typical wine and cheese party.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (6,'Active',
-    'Your mind is an amazing tool, but dont neglect your body. The active category is for sports and other group physical activities.',
-    'People expect to be active. Sports, outdoor activities, anything that gets your heart rate up!');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (7,'Distress',
-    'People posting in destress have found themselves in a poor situation and need help. The idea is that these people have almost always been self sufficient, its just a run of bad luck.',
-    'Only post in the destress category if you are in an atypically bad situation. i.e. you lost the job you have had for 10 years, not I lost my job i have only been employed 2 of the last 10 years.');
-    INSERT INTO CATEGORY (ID, NAME, ATTEND_DESCRIPTION, POST_DESCRIPTION) VALUES (8,'Siminar',
-    'People posting in the Siminar category are subject matter experts (Maybe just self proclaimed). These people should be capable of covering a topic thouroughly with no feedback from the audience.',
-    'If you are posing in the siminar category you need to be extremely knowledgeable on the topics to cover. If you have not ingaged in edjucation or social events of these topics, we strongly recommend you try them first.');
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (1, 1, 1, 'Welcome All!',TO_TIMESTAMP('10-AUG-1914:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (2, 1, 1, 'Punch and Pie!',TO_TIMESTAMP('11-AUG-1916:23:50.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (3, 2, 1, 'Great to be here',TO_TIMESTAMP('10-AUG-1917:33:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (4, 3, 1, 'Why should I come?',TO_TIMESTAMP('11-AUG-1916:11:36.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_TIME_MESSAGE (ID, SENDER_ID, EVENT_TIME_ID, MESSAGE, TIME_STAMP) VALUES (5, 1, 1, 'Punch and Pie will be served!',TO_TIMESTAMP('11-AUG-1916:24:12.123000','DD-MON-RRHH24:MI:SS.FF'));
+
+INSERT INTO EVENT_TIME_MESSAGE_RECIPIENT (ID, RECIEVER_ID, EVENT_TIME_MSG_ID) VALUES (1, 3, 2);
+
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (1, 1, 1, 'Welcome All!',TO_TIMESTAMP('10-AUG-1914:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (2, 1, 1, 'Punch and Pie!',TO_TIMESTAMP('11-AUG-1916:23:50.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (3, 2, 1, 'Great to be here',TO_TIMESTAMP('10-AUG-1917:33:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (4, 3, 1, 'Why should I come?',TO_TIMESTAMP('11-AUG-1916:11:36.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO EVENT_MESSAGE (ID, SENDER_ID, EVENT_ID, MESSAGE, TIME_STAMP) VALUES (5, 1, 1, 'Punch and Pie will be served!',TO_TIMESTAMP('11-AUG-1916:24:12.123000','DD-MON-RRHH24:MI:SS.FF'));
+
+INSERT INTO EVENT_MESSAGE_RECIPIENT (ID, RECIEVER_ID, EVENT_MSG_ID) VALUES (1, 3, 2);
+
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (1, 'Can you believe it?', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:10:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (2, 'What?', 2, 1,
+  TO_TIMESTAMP('10-AUG-1914:11:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (5, 'Depends if this goes any where or is a big flop. This could be the only conversation that ever happens.', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:13:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (12, 'But the dates are all wrong...', 2, 1,
+  TO_TIMESTAMP('10-AUG-1914:14:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (7, 'Shut up the dates dont matter the time is what is important. Besides time stamps in sql are gay.', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:15:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (3, 'This is the first conversation to be added to my application.', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:11:12.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (13, 'You mother fucker', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:22:11.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (9, 'The sad thing is that your not real and Im taking to myself.', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:17:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (10, 'Your moms not real lolz', 2, 1,
+  TO_TIMESTAMP('10-AUG-1914:18:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (14, 'I dont even know what lolz is supposed to mean. Is it just a pussy attempt to use lol without being called gay?', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:19:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (6, 'There you go again using the word gay, why dont you expand your vocabulary so that you can articulate your thoughts better.', 2, 1,
+  TO_TIMESTAMP('10-AUG-1914:20:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (15, 'Why dont you fuck off this conversation is over!', 1, 2,
+  TO_TIMESTAMP('10-AUG-1914:21:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+  INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (4, 'Is that a big deal?', 2, 1,
+    TO_TIMESTAMP('10-AUG-1914:12:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+  INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (8, 'I find the word gay offensive.', 2, 1,
+    TO_TIMESTAMP('10-AUG-1914:16:10.123000','DD-MON-RRHH24:MI:SS.FF'));
+  INSERT INTO MESSAGE (ID, MESSAGE, SENDER_ID, RECIEVER_ID, TIME_STAMP) VALUES (11, 'Fine your being gay anyway.', 2, 1,
+    TO_TIMESTAMP('10-AUG-1914:22:10.123000','DD-MON-RRHH24:MI:SS.FF'));

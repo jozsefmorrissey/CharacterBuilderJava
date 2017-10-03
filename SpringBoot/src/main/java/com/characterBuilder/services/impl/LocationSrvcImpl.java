@@ -34,7 +34,7 @@ public class LocationSrvcImpl implements LocationSrvc {
 	@Override
 	@Transactional
 	public void addLocation(Location location) throws ExceedingLimitException {
-		long max = PropertiesUtil.getMaxCoordinateCount();
+		long max = PropertiesUtil.coordinateCountMax();
 		long count = locRepo.countByUserId(location.getUserId()) + 1; 
 		if(count <= max) {
 			coordSrvc.addCoordinate(location.getCoordinate());

@@ -29,6 +29,7 @@ public class EventTimeSrvcImpl implements EventTimeSrvc{
 
 	@Override
 	public void addTime(EventTime eventTime) throws ExceedingLimitException {
+		//TODO: add creator as participant
 		checkCount(eventTime.getEventId(), 1);
 		eventTimeRepo.saveAndFlush(eventTime);
 	}
@@ -58,7 +59,7 @@ public class EventTimeSrvcImpl implements EventTimeSrvc{
 	}
 	
 	private void checkCount(long eventId, int added) throws ExceedingLimitException {
-		int max = PropertiesUtil.getMaxEventTimeCount();
+		int max = PropertiesUtil.eventTimeCountMax();
 		int dbCount = eventTimeRepo.getByEventId(eventId).size();
 		if(max < dbCount + added)
 			throw new ExceedingLimitException(dbCount + added, max, "Event Times");

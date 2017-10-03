@@ -4,7 +4,7 @@ import java.util.Comparator;
 
 import com.characterBuilder.markers.HasId;
 
-public class ComparitorHasId implements Comparator<HasId> {
+public class ComparitorId implements Comparator<HasId> {
 
 	@Override
 	public int compare(HasId arg0, HasId arg1) {

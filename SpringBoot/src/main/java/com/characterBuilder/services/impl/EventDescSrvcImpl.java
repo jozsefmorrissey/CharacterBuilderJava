@@ -66,9 +66,9 @@ public class EventDescSrvcImpl implements EventDescriptionSrvc {
 	 */
 	@Transactional
 	private void divideAndAddData(Event event, String description) throws InputTooLong {
-		if(description.length() > PropertiesUtil.getDescriptionLength())
-			throw new InputTooLong(description.length(), PropertiesUtil.getDescriptionLength());
-		String[] strs = StringUtil.uniformLengthStrings(description, PropertiesUtil.getDesciptionSegmentLength());
+		if(description.length() > PropertiesUtil.descriptionLength())
+			throw new InputTooLong(description.length(), PropertiesUtil.descriptionLength());
+		String[] strs = StringUtil.uniformLengthStrings(description, PropertiesUtil.descriptionSegmentLength());
 		ArrayList<EventDescription> eventDescs = new ArrayList<EventDescription>();
 		for(int index = 0; index < strs.length; index++){
 			eventDescs.add(new EventDescription(0, event.getId(), strs[index], index));

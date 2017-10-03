@@ -13,6 +13,7 @@ import com.characterBuilder.repositories.ParticipantRepo;
 import com.characterBuilder.services.interfaces.ParticipantSrvc;
 import com.characterBuilder.throwable.exceptions.AddingConflictingIds;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
+import com.characterBuilder.throwable.exceptions.ZeroIdException;
 import com.characterBuilder.util.PropertiesUtil;
 
 @Service
@@ -81,7 +82,7 @@ public class ParticipantSrvcImpl implements ParticipantSrvc {
 	private void verifyLimit(int addedCount, long eventTimeId) 
 			throws ExceedingLimitException {
 		long countDb = partRepo.countByEventTimeId(eventTimeId);
-		long maxCount = PropertiesUtil.getMaxParticipants();
+		long maxCount = PropertiesUtil.participantMax();
 		if(countDb + addedCount > maxCount)
 			throw new ExceedingLimitException(addedCount + countDb, maxCount, "Participant related to a specific EventTime");
 	}

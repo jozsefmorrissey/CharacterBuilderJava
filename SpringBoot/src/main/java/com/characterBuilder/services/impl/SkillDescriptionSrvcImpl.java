@@ -81,9 +81,9 @@ public class SkillDescriptionSrvcImpl implements SkillDescriptionSrvc {
 	 */
 	@Transactional
 	private void divideAndAddData(SkillMap skillMap, String description) throws InputTooLong {
-		if(description.length() > PropertiesUtil.getDescriptionLength())
-			throw new InputTooLong(description.length(), PropertiesUtil.getDescriptionLength());
-		String[] strs = StringUtil.uniformLengthStrings(description, PropertiesUtil.getDesciptionSegmentLength());
+		if(description.length() > PropertiesUtil.descriptionLength())
+			throw new InputTooLong(description.length(), PropertiesUtil.descriptionLength());
+		String[] strs = StringUtil.uniformLengthStrings(description, PropertiesUtil.descriptionSegmentLength());
 		ArrayList<SkillDescription> skillDescs = new ArrayList<SkillDescription>();
 		for(int index = 0; index < strs.length; index++) {
 			skillDescs.add(new SkillDescription(0, skillMap.getId(), strs[index], index));

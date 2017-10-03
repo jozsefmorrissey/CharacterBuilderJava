@@ -7,7 +7,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.characterBuilder.comparator.ComparitorHasId;
+import com.characterBuilder.comparator.ComparitorId;
 import com.characterBuilder.entities.Category;
 import com.characterBuilder.repositories.CategoryRepo;
 import com.characterBuilder.services.interfaces.CategorySrvc;
@@ -47,7 +47,7 @@ public class CategorySrvcImpl implements CategorySrvc {
 	public Category getById(long id) {
 		getData();
 		Category idCat = new Category(id, "","", "");
-		int index = Collections.binarySearch(ordById, idCat, new ComparitorHasId());
+		int index = Collections.binarySearch(ordById, idCat, new ComparitorId());
 		if(index >= 0)
 			return ordByName.get(index);
 		else
@@ -71,7 +71,7 @@ public class CategorySrvcImpl implements CategorySrvc {
 		ordByName = catRepo.findAll();
 		ordById.addAll(ordByName);
 		Collections.sort(ordByName);
-		Collections.sort(ordById, new ComparitorHasId());
+		Collections.sort(ordById, new ComparitorId());
 	}
 	
 	/**

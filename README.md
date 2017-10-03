@@ -22,6 +22,7 @@ The initial scope of this project is a small scale functional system that can be
 * [eclipse](#eclpse)
 * [Lombok](#lombok)
 * [OracleDB](#oracledb)
+* [EclEmma (Optional)](#eclemma)
 
 ### FrontEnd
 ### NodeWebpackBabel
@@ -110,6 +111,10 @@ To rebuild the script, in git bash navigate to 'Setup Files/DataBase/' and run t
 
 This database setup will fully populate data.
 
+### EclEmma
+This is an extention that allows you to run JUnit tests and get code coverage results. Useful tool in determining if any areas of your code have not been tested.
+
+Simply go to the eclipse market place and search for EclEmma and install.
 
 ## Database
 

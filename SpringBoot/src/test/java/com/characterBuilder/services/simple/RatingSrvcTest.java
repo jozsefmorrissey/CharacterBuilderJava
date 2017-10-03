@@ -57,7 +57,7 @@ public class RatingSrvcTest {
 		user6 = userSrvc.getById(6);
 		user7 = userSrvc.getById(7);
 		
-		daysToWait = PropertiesUtil.getDaysBetweenUserRatings();
+		daysToWait = PropertiesUtil.daysBetweenUserRatingsMin();
 		
 		String tsString = "2002-09-10T14:10:10.123";
 		String desc = "Joy to work with!";

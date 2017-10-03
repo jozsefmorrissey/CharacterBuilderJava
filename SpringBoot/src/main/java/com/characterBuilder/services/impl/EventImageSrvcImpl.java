@@ -153,7 +153,7 @@ public class EventImageSrvcImpl implements EventImageSrvc {
 	}
 	
 	private void checkCount(long eventId, int addCount) throws ExceedingLimitException {
-		int MaxImageCount = PropertiesUtil.getMaxImageCount();
+		int MaxImageCount = PropertiesUtil.imageCountMax();
 		int currentCount = addCount + eventImageRepo.countByEventId(eventId);
 		if(MaxImageCount < currentCount) {
 			//TODO: If exception does not roll back transaction clean up the database.

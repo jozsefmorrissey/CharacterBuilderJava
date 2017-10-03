@@ -230,3 +230,53 @@ BEGIN
     RETURN UNIQUE_LINKS;
 END;
 /
+
+-- This function finds all event messages relavant to a
+-- given user.
+create or replace FUNCTION FIND_EVENT_MESSAGES(U_ID NUMBER)
+  RETURN EVENT_MESSAGE_TABLE
+  IS
+  LIST_LINKS EVENT_MESSAGE_TABLE;
+
+  RET_VAL EVENT_MESSAGE_TABLE := EVENT_MESSAGE_TABLE();
+  BEGIN
+    SELECT * BULK COLLECT INTO LIST_LINKS FROM
+        (Select EVENT_MESSAGE_TYPE(evm.ID, evm.sender_id, evm.event_id, emr.reciever_id, evm.message, evm.time_stamp)
+        from event e
+            join event_time et on et.EVENT_ID = e.ID
+            join event_message evm on e.id = evm.EVENT_ID
+            full join event_message_recipient emr on emr.event_msg_id = evm.ID
+            join PARTICIPANT p on p.EVENT_TIME_ID = et.id
+            where evm.SENDER_ID = U_ID and p.USER_ID = U_ID       -- If it was sent by user
+                or (evm.SENDER_ID = e.POSTER_ID and
+                    U_ID = p.USER_ID and emr.Reciever_id is null)     -- If message is blasted out from poster to everyone
+                or emr.RECIEVER_ID = U_ID and p.USER_ID = U_ID    -- If message was sent directly to user
+                or U_ID = e.POSTER_ID and p.user_id = U_ID);      -- If user is poster
+    RETURN LIST_LINKS;
+END;
+/
+
+-- This function finds all event_time messages relavant to
+-- a given user.
+create or replace FUNCTION FIND_EVENT_TIME_MESSAGES(U_ID NUMBER)
+  RETURN EVENT_TIME_MESSAGE_TABLE
+  IS
+  LIST_LINKS EVENT_TIME_MESSAGE_TABLE;
+
+  RET_VAL EVENT_TIME_MESSAGE_TABLE := EVENT_TIME_MESSAGE_TABLE();
+  BEGIN
+    SELECT * BULK COLLECT INTO LIST_LINKS FROM
+        (Select EVENT_TIME_MESSAGE_TYPE(evtm.ID, evtm.sender_id, evtm.event_time_id, etmr.reciever_id, evtm.message, evtm.time_stamp)
+            from event e
+            join event_time et on et.EVENT_ID = e.id
+            join event_time_message evtm on et.id = evtm.EVENT_TIME_ID
+            full join event_time_message_recipient etmr on etmr.event_time_msg_id = evtm.ID
+            join participant p on p.event_time_id = et.id
+            where ((evtm.SENDER_ID = U_ID or etmr.RECIEVER_ID = U_ID)
+                    and p.user_id = U_ID)                           -- Message was sent to or sent by user
+                or (evtm.SENDER_ID = e.POSTER_ID and
+                    etmr.RECIEVER_ID is null and p.user_id = U_ID)  -- Message blasted to everyone
+                or U_ID = e.POSTER_ID and p.user_id = U_ID);           -- if user is poster
+    RETURN LIST_LINKS;
+END;
+/

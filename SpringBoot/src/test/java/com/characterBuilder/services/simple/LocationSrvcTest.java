@@ -52,7 +52,7 @@ public class LocationSrvcTest {
 	
 	@Test
 	public void testAdd() {
-	  int max = PropertiesUtil.getMaxCoordinateCount();
+	  int max = PropertiesUtil.coordinateCountMax();
 	  int startValue = locationSrvc.getByUser(user2).size();
 	  for(int count = startValue; count < max + 1; count++){
 	    assert(locationSrvc.getByUser(user2).size() == count);

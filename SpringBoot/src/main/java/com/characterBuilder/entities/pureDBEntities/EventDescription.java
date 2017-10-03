@@ -1,5 +1,6 @@
 package com.characterBuilder.entities.pureDBEntities;
 
+import javax.annotation.ManagedBean;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,8 +9,15 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.springframework.web.context.annotation.ApplicationScope;
+
+import lombok.Data;
+
 @Entity
 @Table(name = "EVENT_DESCRIPTION")
+@ManagedBean
+@ApplicationScope
+@Data
 public class EventDescription {
 	@Id
 	@Column(name = "ID")
@@ -17,7 +25,7 @@ public class EventDescription {
 	@SequenceGenerator(name = "EVENT_DESCRIPTION_ID_SEQ", sequenceName = "EVENT_DESCRIPTION_ID_SEQ")
 	long id;
 	
-	@Column(name = "event_id")
+	@Column
 	long eventId;
 	
 	@Column
@@ -37,88 +45,5 @@ public class EventDescription {
 		this.description = description;
 		this.position = position;
 		this.eventId = eventId;
-	}
-
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((description == null) ? 0 : description.hashCode());
-		result = prime * result + (int) (eventId ^ (eventId >>> 32));
-		result = prime * result + (int) (id ^ (id >>> 32));
-		result = prime * result + position;
-		return result;
-	}
-
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EventDescription other = (EventDescription) obj;
-		if (description == null) {
-			if (other.description != null)
-				return false;
-		} else if (!description.equals(other.description))
-			return false;
-		if (eventId != other.eventId)
-			return false;
-		if (id != other.id)
-			return false;
-		if (position != other.position)
-			return false;
-		return true;
-	}
-
-
-	@Override
-	public String toString() {
-		return "EventDescription [id=" + id + ", eventId=" + eventId + ", Description=" + description + ", position="
-				+ position + "]";
-	}
-
-
-	public long getId() {
-		return id;
-	}
-
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-
-	public long getEventId() {
-		return eventId;
-	}
-
-
-	public void setEventId(long eventId) {
-		this.eventId = eventId;
-	}
-
-
-	public String getDescription() {
-		return description;
-	}
-
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
-	public int getPosition() {
-		return position;
-	}
-
-
-	public void setPosition(int position) {
-		this.position = position;
 	}
 }

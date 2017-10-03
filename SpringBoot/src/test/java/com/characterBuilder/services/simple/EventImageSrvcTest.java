@@ -39,7 +39,7 @@ public class EventImageSrvcTest {
 		byte[] photo = ImageUtils.convertToBytes(testFileTemplate.replace('?', '0'));
 		int position = 0;
 		this.image = new EventImage(id, eventId, photo, position);
-		maxImageCount = PropertiesUtil.getMaxImageCount();
+		maxImageCount = PropertiesUtil.imageCountMax();
 		
 		this.event = new Event();
 		this.event.setId(3L);
