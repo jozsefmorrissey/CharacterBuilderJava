@@ -10,11 +10,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.Proxy;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import com.characterBuilder.entities.pureDBEntities.Permission;
+import com.characterBuilder.markers.HasIdDesc;
 import com.characterBuilder.util.ImageUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -33,34 +35,38 @@ import lombok.Data;
 @Data
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Proxy(lazy = false)
-public class User {
+public class User implements HasIdDesc{
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "USER_ID_SEQ")
 	@SequenceGenerator(name = "USER_ID_SEQ", sequenceName = "USER_ID_SEQ")
-	long id;
+	private long id;
 	
 	@Column
-	String name;
+	private String name;
 	
 	@Column
-	String email;
+	private String email;
 	
 	@Column
-	Long phoneNumber;
+	private Long phoneNumber;
 	
 	@OneToOne
 	@JoinColumn(name = "PERMISSION_ID")
-	Permission permission;
+	private Permission permission;
 	
 	@Column
-	String password;
+	private String password;
 	
 	@Column(name = "LAST_LOCATION_ID")
-	int lastLocation;
+	private int lastLocation;
 
 	@Column
-	byte[] photo;
+	private byte[] photo;
+	
+	// This is to be retrieved separately.
+	@Transient
+	private String Description;
 
 	public User() {
 		super();

@@ -9,4 +9,6 @@ public interface DescriptionSrvc {
 	public List<Description> getAllEventDesc();
 	public String getSkillDescription(long id);
 	public List<Description> getAllSkillDesc();
+	public List<Description> getAllUserDesc();
+	public String getUserDescription(long id);
 }

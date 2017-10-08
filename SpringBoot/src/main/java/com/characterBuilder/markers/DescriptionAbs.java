@@ -7,7 +7,7 @@ import javax.persistence.MappedSuperclass;
 import com.characterBuilder.ids.DescriptionId;
 
 @MappedSuperclass
-public class DescriptionAbs
+public abstract class DescriptionAbs
 {
 	@EmbeddedId
 	private DescriptionId descId = new DescriptionId();
@@ -26,9 +26,7 @@ public class DescriptionAbs
 		this.setPostion(position);
 	}
 	
-	public DescriptionAbs create(long id, String description, int postion) {
-		return new DescriptionAbs(id, description, postion);
-	}
+	public abstract DescriptionAbs create(long id, String description, int postion);
 	
 	@Override
 	public int hashCode()

@@ -18,6 +18,7 @@ import org.springframework.web.context.annotation.ApplicationScope;
 
 import com.characterBuilder.entities.pureDBEntities.EventImage;
 import com.characterBuilder.entities.pureDBEntities.EventTime;
+import com.characterBuilder.markers.HasIdDesc;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -33,7 +34,7 @@ import lombok.Data;
 @ApplicationScope
 @Data
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
-public class Event {
+public class Event implements HasIdDesc{
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "EVENT_ID_SEQ")
@@ -41,7 +42,7 @@ public class Event {
 	private long id;
 	
 	@Column
-	String title;
+	private String title;
 	
 	@OneToOne
 	@JoinColumn(name = "POSTER_ID")

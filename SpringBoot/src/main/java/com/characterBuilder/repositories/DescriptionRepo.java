@@ -21,4 +21,10 @@ public interface DescriptionRepo extends JpaRepository<Description, Long> {
 
 	@Query(nativeQuery = true, value = "SELECT * FROM SKILL_DESCRIPTION_TBL WHERE ID = :id")
 	public List<Description> getSkillDesc(@Param(value = "id") long id);
+
+	@Query(nativeQuery = true, value = "SELECT * FROM USER_DESCRIPTION_TBL")
+	public List<Description> getAllUserDesc();
+
+	@Query(nativeQuery = true, value = "SELECT * FROM USER_DESCRIPTION_TBL WHERE ID = :id")
+	public List<Description> getUserDesc(long id);
 }

@@ -20,7 +20,7 @@ public class SkillDescriptionSrvcImpl
 	@Autowired
 	SkillDescriptionRepo skillDescRepo;
 	
-	protected DescriptionRepoMarker getDescRepo() {
+	protected DescriptionRepoMarker<SkillDescription> getDescRepo() {
 		return this.skillDescRepo;
 	}
 

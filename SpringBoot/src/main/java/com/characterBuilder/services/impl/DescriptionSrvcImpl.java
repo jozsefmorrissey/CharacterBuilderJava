@@ -22,9 +22,7 @@ public class DescriptionSrvcImpl implements DescriptionSrvc {
 	@Override
 	public String getEventDescription(long id) {
 		List<Description> desc = descRepo.getEventDesc(id);
-		if(desc.size() < 1)
-			return null;
-		return desc.get(0).getText();
+		return checkEmpty(desc);
 	}
 
 	@Override
@@ -35,9 +33,7 @@ public class DescriptionSrvcImpl implements DescriptionSrvc {
 	@Override
 	public String getSkillDescription(long id) {
 		List<Description> desc = descRepo.getSkillDesc(id);
-		if(desc.size() < 1)
-			return null;
-		return desc.get(0).getText();
+		return checkEmpty(desc);
 	}
 
 	@Override
@@ -45,5 +41,22 @@ public class DescriptionSrvcImpl implements DescriptionSrvc {
 		return descRepo.getAllSkillDesc();
 	}
 
-	
+	@Override
+	public List<Description> getAllUserDesc()
+	{
+		return descRepo.getAllUserDesc();
+	}
+
+	@Override
+	public String getUserDescription(long id)
+	{
+		List<Description> desc = descRepo.getUserDesc(id);
+		return checkEmpty(desc);
+	}
+
+	private String checkEmpty(List<Description> descs) {
+		if(descs.size() < 1)
+			return null;
+		return descs.get(0).getText();
+	}
 }

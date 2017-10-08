@@ -18,4 +18,7 @@ public class EventDescription extends DescriptionAbs {
 	public EventDescription (long id, String description, int position){
 		super(id, description, position);
 	}
+	public DescriptionAbs create(long id, String description, int postion) {
+		return new EventDescription(id, description, postion);
+	}
 }

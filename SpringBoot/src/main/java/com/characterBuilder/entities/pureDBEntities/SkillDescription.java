@@ -18,4 +18,7 @@ public class SkillDescription extends DescriptionAbs{
 	public SkillDescription (long id, String description, int position){
 		super(id, description, position);
 	}
+	public DescriptionAbs create(long id, String description, int postion) {
+		return new SkillDescription(id, description, postion);
+	}
 }

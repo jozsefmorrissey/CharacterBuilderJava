@@ -26,18 +26,39 @@ public abstract class DescriptionSrvcAbs<T extends DescriptionAbs, U extends Has
 	protected abstract String getDescription(long id);
 	protected abstract DescriptionRepoMarker<T> getDescRepo();
 	protected abstract T create(long id, String description, int position);
+	
+	/**
+	 * Override to control the size of the strings the
+	 * description is broken down into.
+	 * 
+	 * Note: this should only be modified if the database
+	 * 		 schema is changed.
+	 * @return
+	 */
+	protected int getDescriptionSegmentLength() {
+		return PropertiesUtil.descriptionSegmentLength();
+	}
+	
+	/**
+	 * Override to control the max length
+	 * 
+	 * @return - max allowable length
+	 */
+	protected int getDescriptionLength() {
+		return PropertiesUtil.descriptionLength();
+	}
 
 	
 	/**
-	 * Adds a discription iff no description exists. To overwrite use update.
+	 * Adds a description iff no description exists. To overwrite use update.
 	 * @throws DependenciesNotFullfilledException 
 	 */
 	@Override
 	public void add(U obj, String description) throws OverwritingDataException, InputTooLong, DependenciesNotFullfilledException {
 		long id = obj.getId();
 		
-		// Varify that no Description exists if a null value exists or the index is out
-		// of bounds I force these two cases into the catch block which is the only place
+		// Verify that no Description exists if a null value exists or the index is out
+		// of bounds these two cases are forced into the catch block which is the only place
 		// additions to the database are made.
 		try{
 			String ed = getDescription(id);
@@ -56,16 +77,15 @@ public abstract class DescriptionSrvcAbs<T extends DescriptionAbs, U extends Has
 	// attribute is used to properly reassemble these strings when retrieved.
 	 * 
 	 * @param event - event connected to description
-	 * @param description - the discription of the event
+	 * @param description - the description of the event
 	 * @throws InputTooLong - Exception thrown if description exceeds descriptionLength that is set
 	 * 						  in charBuild.properties.
 	 */
-	@SuppressWarnings("unchecked")
 	@Transactional
 	private void divideAndAddData(U obj, String description) throws InputTooLong {
-		if(description.length() > PropertiesUtil.descriptionLength())
-			throw new InputTooLong(description.length(), PropertiesUtil.descriptionLength());
-		String[] strs = StringUtil.uniformLengthStrings(description, PropertiesUtil.descriptionSegmentLength());
+		if(description.length() > getDescriptionLength())
+			throw new InputTooLong(description.length(), getDescriptionLength());
+		String[] strs = StringUtil.uniformLengthStrings(description, getDescriptionSegmentLength());
 		ArrayList<T> descs = new ArrayList<T>();
 		for(int index = 0; index < strs.length; index++){
 			T newT = create(obj.getId(), strs[index], index);
@@ -76,7 +96,7 @@ public abstract class DescriptionSrvcAbs<T extends DescriptionAbs, U extends Has
 	}
 
 	/**
-	 * Deletes all event discriptions corresponding to event.id.
+	 * Deletes all event descriptions corresponding to event.id.
 	 */
 	@Override
 	@Transactional
