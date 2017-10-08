@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.characterBuilder.abs.DescriptionSrvcAbs;
 import com.characterBuilder.entities.SkillMap;
 import com.characterBuilder.entities.pureDBEntities.Description;
 import com.characterBuilder.entities.pureDBEntities.SkillDescription;
@@ -27,13 +28,13 @@ public class SkillDescriptionSrvcImpl
 	@Override
 	public List<Description> getAllDescriptions()
 	{
-		return descSrvc.getAllSkillDesc();
+		return getDescSrvc().getAllSkillDesc();
 	}
 
 	@Override
 	protected String getDescription(long id)
 	{
-		return descSrvc.getSkillDescription(id);
+		return getDescSrvc().getSkillDescription(id);
 	}
 	
 	@Override

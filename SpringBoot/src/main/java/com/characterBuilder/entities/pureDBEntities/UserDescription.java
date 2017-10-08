@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
-import com.characterBuilder.markers.DescriptionAbs;
+import com.characterBuilder.abs.DescriptionAbs;
 
 @Entity
 @Table(name = "USER_DESCRIPTION")

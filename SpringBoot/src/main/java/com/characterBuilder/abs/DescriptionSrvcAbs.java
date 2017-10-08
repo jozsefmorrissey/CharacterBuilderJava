@@ -1,11 +1,10 @@
-package com.characterBuilder.services.impl;
+package com.characterBuilder.abs;
 
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.characterBuilder.markers.DescriptionAbs;
 import com.characterBuilder.markers.DescriptionRepoMarker;
 import com.characterBuilder.markers.HasIdDesc;
 import com.characterBuilder.services.interfaces.DescriptionSrvc;
@@ -21,6 +20,7 @@ public abstract class DescriptionSrvcAbs<T extends DescriptionAbs, U extends Has
 {
 
 	@Autowired
+	private
 	DescriptionSrvc descSrvc;
 	
 	protected abstract String getDescription(long id);
@@ -119,5 +119,13 @@ public abstract class DescriptionSrvcAbs<T extends DescriptionAbs, U extends Has
 	public void setDescription(U obj) {
 		String description = getDescription(obj.getId());
 		obj.setDescription(description);
+	}
+	public DescriptionSrvc getDescSrvc()
+	{
+		return descSrvc;
+	}
+	public void setDescSrvc(DescriptionSrvc descSrvc)
+	{
+		this.descSrvc = descSrvc;
 	}
 }

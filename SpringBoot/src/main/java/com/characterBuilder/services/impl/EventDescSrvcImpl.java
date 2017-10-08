@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.characterBuilder.abs.DescriptionSrvcAbs;
 import com.characterBuilder.entities.Event;
 import com.characterBuilder.entities.pureDBEntities.Description;
 import com.characterBuilder.entities.pureDBEntities.EventDescription;
@@ -27,13 +28,13 @@ public class EventDescSrvcImpl
 	@Override
 	public List<Description> getAllDescriptions()
 	{
-		return descSrvc.getAllEventDesc();
+		return getDescSrvc().getAllEventDesc();
 	}
 	
 	@Override
 	protected String getDescription(long id)
 	{
-		return descSrvc.getEventDescription(id);
+		return getDescSrvc().getEventDescription(id);
 	}
 	
 	@Override

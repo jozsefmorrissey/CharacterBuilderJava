@@ -1,4 +1,4 @@
-package com.characterBuilder.markers;
+package com.characterBuilder.abs;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;

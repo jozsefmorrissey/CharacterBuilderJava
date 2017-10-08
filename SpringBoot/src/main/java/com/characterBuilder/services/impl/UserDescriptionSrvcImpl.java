@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.characterBuilder.abs.DescriptionSrvcAbs;
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.Description;
 import com.characterBuilder.entities.pureDBEntities.UserDescription;
@@ -25,13 +26,13 @@ public class UserDescriptionSrvcImpl
 	@Override
 	public List<Description> getAllDescriptions()
 	{
-	return descSrvc.getAllUserDesc();
+	return getDescSrvc().getAllUserDesc();
 	}
 	
 	@Override
 	protected String getDescription(long id)
 	{
-		return descSrvc.getUserDescription(id);
+		return getDescSrvc().getUserDescription(id);
 	}
 	
 	@Override
