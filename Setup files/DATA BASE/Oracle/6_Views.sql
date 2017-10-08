@@ -13,6 +13,9 @@ CREATE VIEW EVENT_DESCRIPTION_TBL AS
 CREATE VIEW SKILL_DESCRIPTION_TBL AS
     SELECT * FROM TABLE(CONCAT_SKILL_DESC) WHERE TEXT IS NOT NULL;
 
+CREATE VIEW USER_DESCRIPTION_TBL AS
+    SELECT * FROM TABLE(CONCAT_USER_DESC) WHERE TEXT IS NOT NULL;
+
 
 /*  This following message views combine the information from several tables
     to produce an easily queriable view that will retrieve only the relavant

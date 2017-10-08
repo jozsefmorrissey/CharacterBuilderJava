@@ -1,17 +1,13 @@
 package com.characterBuilder.entities;
 
 import javax.annotation.ManagedBean;
-import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.springframework.web.context.annotation.ApplicationScope;
+
+import com.characterBuilder.ids.ParticipantId;
 
 import lombok.Data;
 
@@ -21,35 +17,48 @@ import lombok.Data;
 @ApplicationScope
 @Data
 public class Participant implements Comparable<Participant>{
-	@Id
-	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PARTICIPANT_ID_SEQ")
-	@SequenceGenerator(name = "PARTICIPANT_ID_SEQ", sequenceName = "PARTICIPANT_ID_SEQ")
-	private long id;
+
+    @EmbeddedId
+	private ParticipantId id;
 	
-	@Column
-	private long eventTimeId;
-	
-	@OneToOne
-	@JoinColumn(name = "USER_ID", updatable = false)
-	private User participant;
+
 
 	public Participant() {
 		super();
 	}
 	
-	public Participant(long id, long eventTimeId, User participant) {
+	public Participant(long eventTimeId, long userId) {
 		super();
-		this.id = id;
-		this.eventTimeId = eventTimeId;
-		this.participant = participant;
+		this.id = new ParticipantId();
+		setEventTimeId(eventTimeId);
+		setUserId(userId);
+	}
+	
+	public void setUserId(long id) {
+		this.id.setUserId(id);
+	}
+	
+	public long getUserId() {
+		return this.id.getUserId();
+	}
+	
+	public void setEventTimeId(long id) {
+		this.id.setEventTimeId(id);
+	}
+	
+	public long getEventTimeId() {
+		return this.id.getEventTimeId();
 	}
 
 	/**
-	 * Sorts in alphabetical order by participant.name
+	 * Sorts by eventTimeId
 	 */
 	@Override
-	public int compareTo(Participant arg0) {
-		return this.getParticipant().getName().compareTo(arg0.getParticipant().getName());
+	public int compareTo(Participant o)
+	{
+		if(this.id.getEventTimeId() == o.getEventTimeId())
+			return 0;
+		
+		return this.id.getEventTimeId() < o.getEventTimeId() ? -1 : 1;
 	}
 }

@@ -2,28 +2,24 @@
 
 SQL
   Create
-  - Categories
-  - Event
-  - Messages
+  - User about me
   - Ratings
 
-  ?Virtual table for category organization?
+  algorithms
+  - rating sum user/event
+  - generate flags user/event
 
   Ensure generated data exists for all appropriate tables.
 
 Java
 
   Objects
-    - Message: user
-    - Message: event
-    - Message: event time
-    - Profile link chain
+    - Event Ratings
+    - User about me
 
   Services/Repositories
-    - Categories
     - User
     - Event
-    - Message: user to user
-    - Message: event to user
-    - Message: event time to user
-    - Profile link chain
+    - Event Ratings
+    - User about me
+    - Flags user/event

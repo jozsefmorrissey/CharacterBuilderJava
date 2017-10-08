@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.characterBuilder.entities.Participant;
 
 public interface ParticipantRepo extends JpaRepository<Participant, Long> {
-	public List<Participant> getByEventTimeId(long id);
-	public void deleteByEventTimeId(long id);
-	public long countByEventTimeId(long id);
+	public List<Participant> findAllByIdEventTimeId(long id);
+	public void deleteByIdEventTimeId(long id);
+	public long countByIdEventTimeId(long id);
 }

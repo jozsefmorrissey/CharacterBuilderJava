@@ -24,7 +24,7 @@ public class ParticipantSrvcImpl implements ParticipantSrvc {
 	
 	@Override
 	public List<Participant> getParticipants(long eventTimeId) {
-		List<Participant> parts = partRepo.getByEventTimeId(eventTimeId);
+		List<Participant> parts = partRepo.findAllByIdEventTimeId(eventTimeId);
 		Collections.sort(parts);
 		return parts;
 	}
@@ -59,7 +59,7 @@ public class ParticipantSrvcImpl implements ParticipantSrvc {
 
 	@Override
 	public void removeAllParticipants(long eventTimeId) {
-		partRepo.deleteByEventTimeId(eventTimeId);
+		partRepo.deleteByIdEventTimeId(eventTimeId);
 	}
 	
 	private void verifyEventTimes(Collection<Participant> participants) 
@@ -81,7 +81,7 @@ public class ParticipantSrvcImpl implements ParticipantSrvc {
 	
 	private void verifyLimit(int addedCount, long eventTimeId) 
 			throws ExceedingLimitException {
-		long countDb = partRepo.countByEventTimeId(eventTimeId);
+		long countDb = partRepo.countByIdEventTimeId(eventTimeId);
 		long maxCount = PropertiesUtil.participantMax();
 		if(countDb + addedCount > maxCount)
 			throw new ExceedingLimitException(addedCount + countDb, maxCount, "Participant related to a specific EventTime");
@@ -90,7 +90,7 @@ public class ParticipantSrvcImpl implements ParticipantSrvc {
 	private void verifyRelations(Participant participant) 
 			throws ZeroIdException {
 		if(participant.getEventTimeId() == 0 || 
-				participant.getParticipant().getId() == 0)
+				participant.getUserId() == 0)
 			throw new ZeroIdException(participant);
 	}
 

@@ -1,4 +1,4 @@
-package com.characterBuilder.services.simple;
+	package com.characterBuilder.services.simple;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +9,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.SkillMap;
 import com.characterBuilder.services.interfaces.SkillDescriptionSrvc;
+import com.characterBuilder.throwable.exceptions.DependenciesNotFullfilledException;
 import com.characterBuilder.throwable.exceptions.InputTooLong;
 import com.characterBuilder.throwable.exceptions.OverwritingDataException;
 import com.characterBuilder.util.PropertiesUtil;
@@ -16,9 +17,9 @@ import com.characterBuilder.util.PropertiesUtil;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SkillDescriptionSrvcTest {
-
+	
 	@Autowired
-	private SkillDescriptionSrvc skillDescSrvc;
+	private SkillDescriptionSrvc descSrvc;
 	
 	private SkillMap skillMap;
 	private String description;
@@ -31,11 +32,17 @@ public class SkillDescriptionSrvcTest {
 	}
 	
 	@Test
+	public void getTest() {
+		System.out.println(descSrvc.getAllDescriptions());
+		
+	}
+	
+	@Test
 	public void testUpdate() {
 	  try {
-	  skillDescSrvc.update(skillMap, description);
+	  descSrvc.update(skillMap, description);
 	  assert(true);
-	  } catch (OverwritingDataException | InputTooLong e) {
+	  } catch (OverwritingDataException | InputTooLong | DependenciesNotFullfilledException e) {
 	    //This should not throw exceptions, exceptions come from the add method which
 	    //is throughly tested in other methods.
 	    assert(false);
@@ -44,13 +51,14 @@ public class SkillDescriptionSrvcTest {
 	  
 	  String newDesc = "Bar Hug";
 	  try {
-	    skillDescSrvc.update(skillMap, newDesc);
+		  descSrvc.update(skillMap, newDesc);
 	    assert(true);
-	  } catch (OverwritingDataException | InputTooLong e) {
+	  } catch (OverwritingDataException | DependenciesNotFullfilledException | InputTooLong e) {
 	    //This should not throuw exceptions, exceptions come from the add method which
 	    //is thourougly tested in other methods.
 	    assert(false);
 	  }
+	  
 	  checkDescription(skillMap, newDesc);
 	  testDelete(skillMap);
 	}
@@ -64,10 +72,9 @@ public class SkillDescriptionSrvcTest {
 	@Test
 	public void testAdd() {
 	  try {
-
-	    skillDescSrvc.add(skillMap, description);
+		  descSrvc.add(skillMap, description);
 	    assert(true);
-	  } catch (OverwritingDataException e) {
+	  } catch (OverwritingDataException | DependenciesNotFullfilledException e) {
 	  //There should be no data in the dataBase.
 	    assert(false);
 	  } catch (InputTooLong e) {
@@ -77,12 +84,12 @@ public class SkillDescriptionSrvcTest {
 	  checkDescription(skillMap, description);
 
 	  try {
-	    skillDescSrvc.add(skillMap, description);
+		  descSrvc.add(skillMap, description);
 	    assert(false);
 	  } catch (OverwritingDataException e) {
 	  //Data should already exist in the dataBase.
 	    assert(true);
-	  } catch (InputTooLong e) {
+	  } catch (InputTooLong | DependenciesNotFullfilledException e) {
 	  //Input should not be too long.
 	  assert(false);
 	  }
@@ -97,9 +104,9 @@ public class SkillDescriptionSrvcTest {
 	@Test
 	public void tooLongTest(){
 	  try {
-	        skillDescSrvc.add(skillMap, description + '!');
+		  descSrvc.add(skillMap, description + '!');
 	        assert(false);
-	      } catch (OverwritingDataException e) {
+	      } catch (OverwritingDataException | DependenciesNotFullfilledException e) {
 	      //There should not be no data in the dataBase.
 	        assert(false);
 	      } catch (InputTooLong e) {
@@ -117,12 +124,12 @@ public class SkillDescriptionSrvcTest {
 	  SkillMap skill = new SkillMap();
 	  skill.setId(1);
 	  try {
-	    skillDescSrvc.add(skill, "Hello World");
+		  descSrvc.add(skill, "Hello World");
 	    assert(false);
 	  } catch (OverwritingDataException e) {
 	    //There should be data in the dataBase.
 	    assert(true);
-	  } catch (InputTooLong e) {
+	  } catch (InputTooLong | DependenciesNotFullfilledException e) {
 	    //Input should not be too long.
 	    assert(false);
 	  }
@@ -134,16 +141,16 @@ public class SkillDescriptionSrvcTest {
 	 * @param skill - skill that the description is to be connected to.
 	 */
 	private void testDelete(SkillMap skillMap) {	  
-	  skillDescSrvc.delete(skillMap);
+		descSrvc.delete(skillMap);
 	  try {
-	    skillDescSrvc.add(skillMap, "hello world");
+		  descSrvc.add(skillMap, "hello world");
 	    assert(true);
-	  } catch (OverwritingDataException e) {
+	  } catch (OverwritingDataException | DependenciesNotFullfilledException e) {
 	    assert(false);
 	  } catch (InputTooLong e) {
 	  assert(false);
 	  }
-	  skillDescSrvc.delete(skillMap);
+	  descSrvc.delete(skillMap);
 	}
 	
 	/*
@@ -167,7 +174,7 @@ public class SkillDescriptionSrvcTest {
 	}
 	
 	private void checkDescription(SkillMap skillMap, String description) {
-		skillDescSrvc.setDescription(skillMap);
+		descSrvc.setDescription(skillMap);
 
 		assert(skillMap.getDescription().equals(description));
 	}

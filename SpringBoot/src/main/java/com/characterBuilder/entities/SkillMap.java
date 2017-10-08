@@ -16,6 +16,7 @@ import javax.persistence.Transient;
 import org.springframework.web.context.annotation.ApplicationScope;
 
 import com.characterBuilder.entities.pureDBEntities.Skill;
+import com.characterBuilder.markers.HasIdDesc;
 
 import lombok.Data;
 
@@ -24,7 +25,7 @@ import lombok.Data;
 @ManagedBean
 @ApplicationScope
 @Data
-public class SkillMap {
+public class SkillMap implements HasIdDesc {
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SKILL_MAP_ID_SEQ")

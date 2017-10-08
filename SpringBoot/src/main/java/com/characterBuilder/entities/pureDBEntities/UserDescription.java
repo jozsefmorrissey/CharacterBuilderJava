@@ -9,13 +9,13 @@ import javax.persistence.Table;
 import com.characterBuilder.markers.DescriptionAbs;
 
 @Entity
-@Table(name = "EVENT_DESCRIPTION")
+@Table(name = "SKILL_DESCRIPTION")
 @AttributeOverrides({
     @AttributeOverride(name = "descId.id", column =
-            @Column(name = "EVENT_ID"))})
-public class EventDescription extends DescriptionAbs {
-	public EventDescription () {}
-	public EventDescription (long id, String description, int position){
+            @Column(name = "SKILL_MAP_ID"))})
+public class UserDescription extends DescriptionAbs{
+	public UserDescription () {}
+	public UserDescription (long id, String description, int position){
 		super(id, description, position);
 	}
 }

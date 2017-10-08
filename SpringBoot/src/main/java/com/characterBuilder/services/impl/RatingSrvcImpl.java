@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.characterBuilder.entities.User;
-import com.characterBuilder.entities.pureDBEntities.Rating;
+import com.characterBuilder.entities.pureDBEntities.UserRating;
 import com.characterBuilder.repositories.RatingRepo;
 import com.characterBuilder.services.interfaces.RatingSrvc;
 import com.characterBuilder.throwable.exceptions.TooCloseException;
@@ -22,24 +22,24 @@ public class RatingSrvcImpl implements RatingSrvc {
 	RatingRepo ratingRepo;
 	
 	@Override
-	public List<Rating> getByReciever(User reciever) {
+	public List<UserRating> getByReciever(User reciever) {
 		return sort(ratingRepo.findByReciever(reciever));
 	}
 
 	@Override
-	public List<Rating> getByAttributer(User attributer) {
+	public List<UserRating> getByAttributer(User attributer) {
 		return sort(ratingRepo.findByAttributer(attributer));
 	}
 	
 
 	@Override
-	public List<Rating> getByAttributerAndReciever(User attributer, User reciever) {
+	public List<UserRating> getByAttributerAndReciever(User attributer, User reciever) {
 		return sort(ratingRepo.findByAttributerAndReciever(attributer, reciever));
 	}
 
 	@Override
-	public void addRating(Rating rating) throws TooCloseException {
-		List<Rating> ratings = getByAttributerAndReciever(rating.getAttributer(), rating.getReciever());
+	public void addRating(UserRating rating) throws TooCloseException {
+		List<UserRating> ratings = getByAttributerAndReciever(rating.getAttributer(), rating.getReciever());
 		if(ratings.size() == 0){
 			ratingRepo.save(rating);
 		} else {
@@ -57,24 +57,24 @@ public class RatingSrvcImpl implements RatingSrvc {
 	}
 
 	@Override
-	public void addAllRatings(Collection<Rating> ratings) throws TooCloseException {
-		for(Rating r : ratings) {
+	public void addAllRatings(Collection<UserRating> ratings) throws TooCloseException {
+		for(UserRating r : ratings) {
 			addRating(r);
 		}
 	}
 
 	
 	@Override
-	public void deleteRating(Rating rating) {
+	public void deleteRating(UserRating rating) {
 		ratingRepo.delete(rating);
 	}
 	
 	@Override
-	public void deleteAllRatings(Collection<Rating> ratings) {
+	public void deleteAllRatings(Collection<UserRating> ratings) {
 		ratingRepo.delete(ratings);
 	}
 	
-	private List<Rating> sort(List<Rating> ratings) {
+	private List<UserRating> sort(List<UserRating> ratings) {
 		Collections.sort(ratings);
 		return ratings;
 	}

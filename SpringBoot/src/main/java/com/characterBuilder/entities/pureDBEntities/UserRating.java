@@ -22,11 +22,11 @@ import com.characterBuilder.entities.User;
 import lombok.Data;
 
 @Entity
-@Table(name = "RATING")
+@Table(name = "USER_RATING")
 @ManagedBean
 @ApplicationScope
 @Data
-public class Rating implements Comparable<Rating>{
+public class UserRating implements Comparable<UserRating>{
 	@Id
 	@Column(name = "ID")
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "RATING_SEQ")
@@ -54,11 +54,11 @@ public class Rating implements Comparable<Rating>{
 	@Column
 	short attributerSnapshotRating;
 
-	public Rating() {
+	public UserRating() {
 		super();
 	}
 
-	public Rating(long id, User attributer, User reciever, String description, LocalDateTime dateTime, short value,
+	public UserRating(long id, User attributer, User reciever, String description, LocalDateTime dateTime, short value,
 			short attributerSnapshotRating) {
 		super();
 		this.id = id;
@@ -71,7 +71,7 @@ public class Rating implements Comparable<Rating>{
 	}
 
 	@Override
-	public int compareTo(Rating arg0) {		
+	public int compareTo(UserRating arg0) {		
 		return arg0.dateTime.compareTo(this.dateTime);
 	}	
 }

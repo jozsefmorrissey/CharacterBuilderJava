@@ -11,7 +11,7 @@ import com.characterBuilder.entities.pureDBEntities.ProfileLink;
 
 public interface ProfileLinkRepo extends JpaRepository<ProfileLink, Long> {
 
-	public List<ProfileLink> findByCreator(User user);
+	public List<ProfileLink> findByIdCreator(User user);
 	
 	@Query(nativeQuery = true, value = "SELECT * FROM TABLE(FIND_PROFILE_LINKS(:id))")
 	public List<ProfileLink> findNatural(@Param(value = "id") long id);

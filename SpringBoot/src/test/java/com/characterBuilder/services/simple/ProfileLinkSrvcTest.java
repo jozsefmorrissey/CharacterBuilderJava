@@ -4,13 +4,11 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.User;
@@ -33,8 +31,6 @@ public class ProfileLinkSrvcTest {
 	private User creat;
 	private ProfileLink profileLink = new ProfileLink();
 	private ProfileLink selfLink = new ProfileLink();
-	private ProfileLink redundantLink = new ProfileLink();
-	private ProfileLink reverseRedundantLink = new ProfileLink();
 
 	private long u1Id = 5;
 	private long u2Id = 7;
@@ -48,14 +44,8 @@ public class ProfileLinkSrvcTest {
 		user1 = userSrvc.getById(u1Id);
 		user2 = userSrvc.getById(u2Id);
 		creat = userSrvc.getById(cId);
-		profileLink = new ProfileLink(0, user1, user2, creat, good, reason);
-		selfLink = new ProfileLink(0, user1, user1, creat, good, reason);
-
-		User user3 = userSrvc.getById(1);
-		User user4 = userSrvc.getById(4);
-		redundantLink = new ProfileLink(0, user3, user4, user4, good, reason);
-		reverseRedundantLink = new ProfileLink(0, user4, user3, user4, good, reason);
-
+		profileLink = new ProfileLink(user1, user2, creat, good, reason);
+		selfLink = new ProfileLink(user1, user1, creat, good, reason);
 	}
 	
 	@Test
@@ -64,11 +54,14 @@ public class ProfileLinkSrvcTest {
 		
 		boolean found = false;
 		for(ProfileLink p : pl) {
-			if(p.getId() == 1) {
+			p.getId().orderUsers();
+			if(p.getUser1().getId() == 1 && p.getUser2().getId() == 4) {
+			//if(p.getId() == 1) {
 				verifyEqual(p, 4, 4, false, "Contributer = 4");
 				found = !found;
 			}
-			if(p.getId() == 2) {
+			if(p.getUser1().getId() == 1 && p.getUser2().getId() == 15) {
+			//if(p.getId() == 2) {
 				verifyEqual(p, 15, 9, true, "Contributer = 9");
 				found = !found;
 			}
@@ -85,11 +78,15 @@ public class ProfileLinkSrvcTest {
 		
 		boolean found = false;
 		for(ProfileLink p : pl) {
-			if(p.getId() == 6) {
+			if(p.getUser1().getId() == 496 && p.getUser2().getId() == 641) {
+
+			//if(p.getId() == 6) {
 				verifyEqual(p, 641, 608, false, "velit eu sem. Pellentesque ut ipsum ac mi eleifend");
 				found = !found;
 			}
-			if(p.getId() == 50) {
+			if(p.getUser1().getId() == 277 && p.getUser2().getId() == 601) {
+
+			//if(p.getId() == 50) {
 				verifyEqual(p, 601, 608, true, "sodales elit erat vitae risus. Duis a mi fringilla mi lacinia mattis. Integer eu");
 				found = !found;
 			}
@@ -109,32 +106,11 @@ public class ProfileLinkSrvcTest {
 		pl = proLinkSrvc.getAll(user1);
 		assert(pl.size() == 0);
 		
-		// Test composite key constraint.
-		try {
-			proLinkSrvc.addLink(redundantLink);
-			fail("This is like should violate the primary key constraint");
-		} catch (DataIntegrityViolationException e) {
-			// This constraint restricts individual people form linking profiles
-			// multiple times.
-			assert (true);
-		}
-		
-		// Test setters and constructors in ProfileLink should ensure userId1 < userId2
-		// Which will prevent event a single link duplication.
-		try {
-			proLinkSrvc.addLink(reverseRedundantLink);
-			fail("This is like should violate the primary key constraint");
-		} catch (DataIntegrityViolationException e) {
-			// This constraint restricts individual people form linking profiles
-			// multiple times.
-			assert (true);
-		}
-		
 		// Test user1 != user2 constraint
 		try {
 			proLinkSrvc.addLink(selfLink);
 			fail("This is like should violate a constraint");
-		} catch (DataIntegrityViolationException e) {
+		} catch (Exception e) {
 			// There is no reason to link a profile to itself
 			assert (true);
 		}

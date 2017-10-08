@@ -130,9 +130,9 @@ public class ParticipantSrvcTest {
 	
 	@Test
 	public void testAddZeroIds() {
-		Participant p= participants.get(0);
+		Participant p = participants.get(0);
 		
-		p.getParticipant().setId(0);
+		p.setUserId(0);
 		try {
 			partSrvc.addParticipant(p);
 			fail("Add should not be successful");
@@ -142,7 +142,7 @@ public class ParticipantSrvcTest {
 			assert(true);
 		}
 		
-		p.getParticipant().setId(1);
+		p.setUserId(1);
 		p.setEventTimeId(0);
 		try {
 			partSrvc.addParticipant(p);
@@ -170,7 +170,7 @@ public class ParticipantSrvcTest {
 		}
 		
 		participants.get(eventTimeIndex).setEventTimeId(1);
-		participants.get(userIndex).getParticipant().setId(0);
+		participants.get(userIndex).setUserId(0);
 		try {
 			partSrvc.addAllParticipants(participants);
 			fail("Add should not be successful");
@@ -203,7 +203,7 @@ public class ParticipantSrvcTest {
 		Collections.shuffle(users);
 		int max = PropertiesUtil.participantMax();
 		for(int index = 0; index < max; index++) {
-			this.participants.add(new Participant(0, 2, users.get(index)));
+			this.participants.add(new Participant(2, users.get(index).getId()));
 		}
 	}
 }

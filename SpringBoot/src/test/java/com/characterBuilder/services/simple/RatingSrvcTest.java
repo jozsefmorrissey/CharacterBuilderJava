@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.User;
-import com.characterBuilder.entities.pureDBEntities.Rating;
+import com.characterBuilder.entities.pureDBEntities.UserRating;
 import com.characterBuilder.repositories.RatingRepo;
 import com.characterBuilder.services.interfaces.RatingSrvc;
 import com.characterBuilder.services.interfaces.UserSrvc;
@@ -41,9 +41,9 @@ public class RatingSrvcTest {
 	private User user6;
 	private User user7;
 	
-	private Rating rating1;
-	private Rating rating2;
-	private Rating rating3;
+	private UserRating rating1;
+	private UserRating rating2;
+	private UserRating rating3;
 	
 	private int daysToWait;
 	
@@ -62,25 +62,25 @@ public class RatingSrvcTest {
 		String tsString = "2002-09-10T14:10:10.123";
 		String desc = "Joy to work with!";
 		LocalDateTime ldt = StringUtil.localDateTimeConverter(tsString);
-		rating1 = new Rating(1,user2,user1, desc, ldt, (short)9, (short)7);
+		rating1 = new UserRating(1,user2,user1, desc, ldt, (short)9, (short)7);
 		
 		tsString = "2002-10-10T14:10:10.123";
 		desc = "He is a vicious beast!";
 		ldt = StringUtil.localDateTimeConverter(tsString);
-		rating2 = new Rating(2,user5,user1,desc,ldt,(short)0,(short)9);
+		rating2 = new UserRating(2,user5,user1,desc,ldt,(short)0,(short)9);
 
 		tsString = "2002-11-10T14:10:10.123";
 		desc = "I like chicken I like liver...";
 		ldt = StringUtil.localDateTimeConverter(tsString);
-		rating3 = new Rating(3,user4,user1,desc,ldt,(short)9,(short)1);
+		rating3 = new UserRating(3,user4,user1,desc,ldt,(short)9,(short)1);
 	}
 	
 	@Test
 	public void testGetByReciever() {
-		List<Rating> ratings = ratingSrvc.getByReciever(user1);
+		List<UserRating> ratings = ratingSrvc.getByReciever(user1);
 		assert(ratings.size() == 3);
 		boolean found = false;
-		for(Rating r : ratings) {
+		for(UserRating r : ratings) {
 			if(r.getId() == 1) {
 				assert(rating1.equals(r));
 				found = true;
@@ -99,7 +99,7 @@ public class RatingSrvcTest {
 	
 	@Test
 	public void testGetByAttributer() {
-		List<Rating> ratings = ratingSrvc.getByAttributer(user4);
+		List<UserRating> ratings = ratingSrvc.getByAttributer(user4);
 		assert(ratings.size() == 1);
 		assert(ratings.get(0).equals(rating3));
 	}

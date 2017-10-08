@@ -37,6 +37,6 @@ public class ProfileLinkSrvcImpl implements ProfileLinkSrvc {
 
 	@Override
 	public List<ProfileLink> getAllByCreator(User user) {
-		return proLinkRepo.findByCreator(user);
+		return proLinkRepo.findByIdCreator(user);
 	}
 }
