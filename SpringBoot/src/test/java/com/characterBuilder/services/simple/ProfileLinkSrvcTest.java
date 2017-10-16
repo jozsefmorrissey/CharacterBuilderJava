@@ -13,8 +13,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.ProfileLink;
-import com.characterBuilder.services.interfaces.ProfileLinkSrvc;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.srvc.interfaces.ProfileLinkSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

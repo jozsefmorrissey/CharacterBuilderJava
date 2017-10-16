@@ -2,7 +2,6 @@ package com.characterBuilder.controllers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpSession;
 
@@ -18,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.characterBuilder.entities.Event;
-import com.characterBuilder.services.interfaces.EventSrvc;
+import com.characterBuilder.srvc.interfaces.EventSrvc;
 import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 @RestController

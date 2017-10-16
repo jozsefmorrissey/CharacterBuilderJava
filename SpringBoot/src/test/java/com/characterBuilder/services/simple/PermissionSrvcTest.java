@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.pureDBEntities.Permission;
-import com.characterBuilder.services.interfaces.PermissionSrvc;
+import com.characterBuilder.srvc.interfaces.PermissionSrvc;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

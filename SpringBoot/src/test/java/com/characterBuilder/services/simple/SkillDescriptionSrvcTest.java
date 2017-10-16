@@ -8,11 +8,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.SkillMap;
-import com.characterBuilder.services.interfaces.SkillDescriptionSrvc;
+import com.characterBuilder.srvc.interfaces.SkillDescriptionSrvc;
 import com.characterBuilder.throwable.exceptions.DependenciesNotFullfilledException;
 import com.characterBuilder.throwable.exceptions.InputTooLong;
 import com.characterBuilder.throwable.exceptions.OverwritingDataException;
-import com.characterBuilder.util.PropertiesUtil;
+import com.characterBuilder.util.properties.CharBuildProp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -20,6 +20,9 @@ public class SkillDescriptionSrvcTest {
 	
 	@Autowired
 	private SkillDescriptionSrvc descSrvc;
+	
+	@Autowired
+	CharBuildProp charProp;
 	
 	private SkillMap skillMap;
 	private String description;
@@ -159,7 +162,7 @@ public class SkillDescriptionSrvcTest {
 	 * can confirm weather the program can handle the given value.
 	 */
 	private String buildMaxDescription(){
-		int maxLength = PropertiesUtil.descriptionLength();
+		int maxLength = charProp.descriptionLength();
 		String templateString = "The history of nuclear physics as a discipline distinct from atomic physics starts with the discovery of radioactivity by Henri Becquerel in 1896,[2] while investigating phosphorescence in uranium salts.[3] The discovery of the electron by J. J. Thomson[4] a year later was an indication that the atom had internal structure. At the beginning of the 20th century the accepted model of the atom was J. J. Thomson\'s \"plum pudding\" model in which the atom was a positively charged ball with smaller negatively charged electrons embedded inside it.\n\nIn the years that followed, radioactivity was extensively investigated, notably by Marie and Pierre Curie as well as by Ernest Rutherford and his collaborators. By the turn of the century physicists had also discovered three types of radiation e"
 				+ "manating from atoms, which they named alpha, beta, and gamma radiation. Experiments by Otto Hahn in 1911 and by James Chadwick in 1914 discovered that the beta decay spectrum was continuous rather than discrete. That is, electrons were ejected from the atom with a continuous range of energies, rather than the discrete amounts of energy that were observed in gamma and alpha decays. This was a problem for nuclear physics at the time, because it seemed to indicate that energy was not conserved in these decays.\n\nThe 1903 Nobel Prize in Physics was awarded jointly to Becquerel for his discovery and to Marie and Pierre Curie for their subsequent research into radioactivity. Rutherford was awarded the Nobel Prize in Chemistry in 1908 for his \"investigations into the disintegration of the elements and"
 				+ " the chemistry of radioactive substances\".\nI am adding this sentance.\nIn 1905 Albert Einstein formulated the idea of mass–energy equivalence. While the work on radioactivity by Becquerel and Marie Curie predates this, an explanation of the source of the energy of radioactivity would have to wait for the discovery that the nucleus itself was composed of smaller constituents, the nucleons.\n\nRutherford\'s team discovers the nucleus[edit]\nIn 1906 Ernest Rutherford published \"Retardation of the α Particle from Radium in passing through matter.\"[5] Hans Geiger expanded on this work in a communication to the Royal Society[6] with experiments he and Rutherford had done, passing alpha particles through air, aluminum foil and gold leaf. More work was published in 1909 by Geiger and Ernest Marsden,[7] and further greatly exp"

@@ -15,10 +15,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.Event;
 import com.characterBuilder.entities.pureDBEntities.EventTime;
-import com.characterBuilder.services.interfaces.EventTimeSrvc;
+import com.characterBuilder.srvc.interfaces.EventTimeSrvc;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
-import com.characterBuilder.util.PropertiesUtil;
 import com.characterBuilder.util.StringUtil;
+import com.characterBuilder.util.properties.CharBuildProp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,6 +26,9 @@ public class EventTimeSrvcTest {
 
 	@Autowired
 	EventTimeSrvc eventTimeSrvc;
+	
+	@Autowired
+	CharBuildProp charProp;
 	
 	private long eventId = 3L;
 	private Event event1;
@@ -98,7 +101,7 @@ public class EventTimeSrvcTest {
 	
 	private Collection<EventTime> GetRandomEventTimes() {
 		Collection<EventTime> times = new ArrayList<EventTime>();
-		int max = PropertiesUtil.eventTimeCountMax();
+		int max = charProp.eventTimeCountMax();
 		for(int count = 0; count < max; count++) {
 			times.add(GetRandomEventTime());
 		}

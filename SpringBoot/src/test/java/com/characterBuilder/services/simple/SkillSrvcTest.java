@@ -11,14 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.pureDBEntities.Skill;
-import com.characterBuilder.services.interfaces.SkillSrvc;
+import com.characterBuilder.srvc.impl.ConstantSrvcAbs;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class SkillSrvcTest {
 	
 	@Autowired
-	SkillSrvc skillSrvc;
+	ConstantSrvcAbs<Skill> skillSrvc;
 	
 	String skill1 = "Hard Working";
 	String skill2 = "ANALITICAL";
@@ -31,49 +31,49 @@ public class SkillSrvcTest {
 				"Handling Pressure"};
 		
 		for(int index = 0; index < skills.length; index++) {
-			this.skills.add(new Skill(skills[index]));
+			this.skills.add(new Skill(index + 1000, skills[index]));
 		}
 		
 	}
 	
 	@Test
 	public void testGet() {
-		assert(skillSrvc.getById(1).getName().equals(skill1));
-		assert(skillSrvc.getById(2).getName().equals(skill2));
+		assert(skillSrvc.getById(1).getValue().equals(skill1));
+		assert(skillSrvc.getById(2).getValue().equals(skill2));
 	}
 
 	@Test
 	public void testAdd() {	
-		int initialSize = skillSrvc.getAllSkills().size();
+		int initialSize = skillSrvc.getAll().size();
 		
-		skillSrvc.addSkill(skills.get(0));
-		List<Skill> sl = skillSrvc.getAllSkills();
+		skillSrvc.add(skills.get(0));
+		List<Skill> sl = skillSrvc.getAll();
 		Skill found = null;
 		for(Skill s : sl) {
-			if(s.getName().equals(skills.get(0).getName()))
+			if(s.getValue().equals(skills.get(0).getValue()))
 				found = s;
 		}
-		assert(skillSrvc.getAllSkills().size() == initialSize + 1);
+		assert(skillSrvc.getAll().size() == initialSize + 1);
 		assert(found != null);
-		skillSrvc.removeSkill(found);
-		assert(skillSrvc.getAllSkills().size() == initialSize);
+		skillSrvc.remove(found);
+		assert(skillSrvc.getAll().size() == initialSize);
 	}
 	
 	@Test
 	public void testAddExisting() {	
-		int initialSize = skillSrvc.getAllSkills().size();
+		int initialSize = skillSrvc.getAll().size();
 		
-		skillSrvc.addSkill(new Skill(skill1));
+		skillSrvc.add(new Skill(1l, skill1));
 
-		assert(skillSrvc.getAllSkills().size() == initialSize);
+		assert(skillSrvc.getAll().size() == initialSize);
 	}
 	
 	@Test 
 	public void testAddAll() {
-		int initialSize = skillSrvc.getAllSkills().size();
+		int initialSize = skillSrvc.getAll().size();
 		
-		skillSrvc.addAllSkills(skills);
-		List<Skill> sList = skillSrvc.getAllSkills();
+		skillSrvc.addAll(skills);
+		List<Skill> sList = skillSrvc.getAll();
 
 		verifySkillsExistInDB(sList);
 		
@@ -82,7 +82,7 @@ public class SkillSrvcTest {
 	
 	@Test
 	public void testAddAllAddExisting() {
-		List<Skill> OrigSkillsDB = skillSrvc.getAllSkills();
+		List<Skill> OrigSkillsDB = skillSrvc.getAll();
 		int initialSize = OrigSkillsDB.size();
 		
 		// Generating random location to insert Already existent skill names;
@@ -94,11 +94,11 @@ public class SkillSrvcTest {
 		Skill newSkill2 = skills.get(randomLoc2);
 		
 		// Modifying skill names
-		newSkill1.setName(skill1);
-		newSkill2.setName(skill2);		
+		newSkill1.setValue(skill1);
+		newSkill2.setValue(skill2);		
 		
-		skillSrvc.addAllSkills(skills);
-		List<Skill> modSkillsDB = skillSrvc.getAllSkills();
+		skillSrvc.addAll(skills);
+		List<Skill> modSkillsDB = skillSrvc.getAll();
 
 		verifySkillsExistInDB(modSkillsDB);
 
@@ -110,9 +110,9 @@ public class SkillSrvcTest {
 	}
 
 	private void removeAndVerifySuccess(int initialSize) {
-		assert(skillSrvc.getAllSkills().size() == initialSize + skills.size());
-		skillSrvc.removeAllSkills(skills);
-		assert(skillSrvc.getAllSkills().size() == initialSize);
+		assert(skillSrvc.getAll().size() == initialSize + skills.size());
+		skillSrvc.removeAll(skills);
+		assert(skillSrvc.getAll().size() == initialSize);
 	}
 
 	private void verifySkillsExistInDB(List<Skill> modSkillsDB) {
@@ -120,7 +120,7 @@ public class SkillSrvcTest {
 		
 		for(Skill jSkill : skills) {
 			for(Skill DBSkill : modSkillsDB) {
-				if(DBSkill.getName().equals(jSkill.getName()))
+				if(DBSkill.getValue().equals(jSkill.getValue()))
 					found = DBSkill;
 			}
 			assert(found != null);

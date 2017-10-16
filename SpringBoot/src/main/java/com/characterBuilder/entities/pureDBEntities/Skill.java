@@ -1,47 +1,21 @@
 package com.characterBuilder.entities.pureDBEntities;
 
-import javax.annotation.ManagedBean;
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import org.springframework.web.context.annotation.ApplicationScope;
-
-import lombok.Data;
+import com.characterBuilder.entities.abs.ConstantAbs;
 
 @Entity
-@Table
-@ManagedBean
-@ApplicationScope
-@Data
-public class Skill implements Comparable<Skill>
+@Table(name = "SKILL")
+public class Skill extends ConstantAbs
 {
-	@Id
-	@Column(name = "ID")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SKILL_ID_SEQ")
-	@SequenceGenerator(name = "SKILL_ID_SEQ", sequenceName = "SKILL_ID_SEQ")
-	long id;
-
-	@Column(unique = true)
-	String name;
-
 	public Skill()
 	{
 		super();
 	}
 
-	public Skill(String name)
+	public Skill(long id, String value)
 	{
-		this.name = name;
-	}
-
-	@Override
-	public int compareTo(Skill o)
-	{
-		return name.compareTo(o.name);
+		super(id,value);
 	}
 }

@@ -26,4 +26,8 @@ public class StringUtil {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"); 
 		return LocalDateTime.parse(tsString, formatter);
 	}
+	
+	public static String[] commaSepToArr(String commaSep) {
+		return commaSep.replaceAll("\\s", "").split(",");
+	}
 }

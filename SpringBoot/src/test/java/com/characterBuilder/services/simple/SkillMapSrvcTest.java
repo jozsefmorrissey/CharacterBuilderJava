@@ -13,9 +13,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.characterBuilder.entities.SkillMap;
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.Skill;
-import com.characterBuilder.services.interfaces.SkillMapSrvc;
-import com.characterBuilder.services.interfaces.SkillSrvc;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.srvc.impl.ConstantSrvcAbs;
+import com.characterBuilder.srvc.interfaces.SkillMapSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 
 //TODO: test add and remove functions
 @RunWith(SpringRunner.class)
@@ -26,7 +26,7 @@ public class SkillMapSrvcTest {
 	SkillMapSrvc skillMapSrvc;
 	
 	@Autowired
-	SkillSrvc skillSrvc;
+	ConstantSrvcAbs<Skill> skillSrvc;
 	
 	@Autowired
 	UserSrvc userSrvc;

@@ -14,29 +14,30 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.UserRating;
-import com.characterBuilder.repositories.RatingRepo;
-import com.characterBuilder.services.interfaces.RatingSrvc;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.repo.UserRatingRepo;
+import com.characterBuilder.srvc.interfaces.UserRatingSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 import com.characterBuilder.throwable.exceptions.TooCloseException;
-import com.characterBuilder.util.PropertiesUtil;
 import com.characterBuilder.util.StringUtil;
+import com.characterBuilder.util.properties.CharBuildProp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RatingSrvcTest {
 	@Autowired
-	private RatingSrvc ratingSrvc;
+	private UserRatingSrvc ratingSrvc;
 	
 	@Autowired
-	private RatingRepo ratingRepo;
+	private UserRatingRepo ratingRepo;
 	
 	@Autowired
 	private UserSrvc userSrvc;
 	
+	@Autowired
+	CharBuildProp charProp;
+	
 	private User user1;
-	private User user2;
 	private User user4;
-	private User user5;
 	
 	private User user6;
 	private User user7;
@@ -50,29 +51,27 @@ public class RatingSrvcTest {
 	@Before
 	public void initialize() {
 		user1 = userSrvc.getById(1);
-		user2 = userSrvc.getById(2);
 		user4 = userSrvc.getById(4);
-		user5 = userSrvc.getById(5);
 		
 		user6 = userSrvc.getById(6);
 		user7 = userSrvc.getById(7);
-		
-		daysToWait = PropertiesUtil.daysBetweenUserRatingsMin();
+
+		daysToWait = charProp.daysBetweenUserRatingsMin();
 		
 		String tsString = "2002-09-10T14:10:10.123";
 		String desc = "Joy to work with!";
 		LocalDateTime ldt = StringUtil.localDateTimeConverter(tsString);
-		rating1 = new UserRating(1,user2,user1, desc, ldt, (short)9, (short)7);
+		rating1 = new UserRating(1,2,1, desc, ldt, (short)9, (short)7);
 		
 		tsString = "2002-10-10T14:10:10.123";
 		desc = "He is a vicious beast!";
 		ldt = StringUtil.localDateTimeConverter(tsString);
-		rating2 = new UserRating(2,user5,user1,desc,ldt,(short)0,(short)9);
+		rating2 = new UserRating(2,5,1,desc,ldt,(short)0,(short)9);
 
 		tsString = "2002-11-10T14:10:10.123";
 		desc = "I like chicken I like liver...";
 		ldt = StringUtil.localDateTimeConverter(tsString);
-		rating3 = new UserRating(3,user4,user1,desc,ldt,(short)9,(short)1);
+		rating3 = new UserRating(3,4,1,desc,ldt,(short)9,(short)1);
 	}
 	
 	@Test
@@ -108,8 +107,8 @@ public class RatingSrvcTest {
 	public void testAddRating() {
 		//Test no ratings exist add.
 		rating1.setId(0);
-		rating1.setAttributer(user6);
-		rating1.setReciever(user7);
+		rating1.setAttributer(user6.getId());
+		rating1.setReciever(user7.getId());
 		try {
 			ratingSrvc.addRating(rating1);
 		} catch (TooCloseException e) {
@@ -128,8 +127,8 @@ public class RatingSrvcTest {
 		rating1.setId(0);
 		ratingRepo.save(rating1);
 		
-		rating2.setAttributer(user2);
-		rating2.setReciever(user1);
+		rating2.setAttributer(2);
+		rating2.setReciever(1);
 		
 		rating2.setId(0);
 		try {
@@ -151,8 +150,8 @@ public class RatingSrvcTest {
 		rating1.setId(0);
 		ratingRepo.save(rating1);		
 		
-		rating2.setAttributer(user2);
-		rating2.setReciever(user1);
+		rating2.setAttributer(2);
+		rating2.setReciever(1);
 
 		rating2.setId(0);
 		try {

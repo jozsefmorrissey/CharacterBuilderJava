@@ -14,9 +14,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.characterBuilder.entities.Location;
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.Coordinate;
-import com.characterBuilder.services.interfaces.LocationSrvc;
+import com.characterBuilder.srvc.interfaces.LocationSrvc;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
-import com.characterBuilder.util.PropertiesUtil;
+import com.characterBuilder.util.properties.CharBuildProp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -24,6 +24,10 @@ public class LocationSrvcTest {
 	
 	@Autowired
 	LocationSrvc locationSrvc;
+	
+
+	@Autowired
+	CharBuildProp property;
 
 	private User user1;
 	private User user2;
@@ -52,7 +56,7 @@ public class LocationSrvcTest {
 	
 	@Test
 	public void testAdd() {
-	  int max = PropertiesUtil.coordinateCountMax();
+	  int max = property.coordinateCountMax();
 	  int startValue = locationSrvc.getByUser(user2).size();
 	  for(int count = startValue; count < max + 1; count++){
 	    assert(locationSrvc.getByUser(user2).size() == count);

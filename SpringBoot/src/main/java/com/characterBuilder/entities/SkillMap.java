@@ -15,6 +15,7 @@ import javax.persistence.Transient;
 
 import org.springframework.web.context.annotation.ApplicationScope;
 
+import com.characterBuilder.entities.abs.ConstantAbs;
 import com.characterBuilder.entities.pureDBEntities.Skill;
 import com.characterBuilder.markers.HasIdDesc;
 

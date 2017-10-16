@@ -15,10 +15,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.Event;
 import com.characterBuilder.entities.pureDBEntities.EventImage;
-import com.characterBuilder.services.interfaces.EventImageSrvc;
+import com.characterBuilder.srvc.interfaces.EventImageSrvc;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
 import com.characterBuilder.util.ImageUtils;
-import com.characterBuilder.util.PropertiesUtil;
+import com.characterBuilder.util.properties.CharBuildProp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -26,6 +26,9 @@ public class EventImageSrvcTest {
 	
 	@Autowired
 	private EventImageSrvc eventImageSrvc;
+	
+	@Autowired
+	CharBuildProp charProp;
 	
 	private Event event;
 	private EventImage image;
@@ -39,7 +42,7 @@ public class EventImageSrvcTest {
 		byte[] photo = ImageUtils.convertToBytes(testFileTemplate.replace('?', '0'));
 		int position = 0;
 		this.image = new EventImage(id, eventId, photo, position);
-		maxImageCount = PropertiesUtil.imageCountMax();
+		maxImageCount = charProp.imageCountMax();
 		
 		this.event = new Event();
 		this.event.setId(3L);

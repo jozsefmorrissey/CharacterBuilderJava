@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.characterBuilder.services.interfaces.DescriptionSrvc;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.srvc.interfaces.DescriptionSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

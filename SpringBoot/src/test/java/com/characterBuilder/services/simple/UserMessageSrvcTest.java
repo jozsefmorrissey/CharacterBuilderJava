@@ -18,13 +18,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.UserMessage;
-import com.characterBuilder.services.interfaces.UserMessageSrvc;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.srvc.interfaces.UserMessageSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
 import com.characterBuilder.throwable.exceptions.InvalidIdException;
 import com.characterBuilder.throwable.exceptions.NullOrEmptyStringException;
-import com.characterBuilder.util.PropertiesUtil;
 import com.characterBuilder.util.TestUtilities;
+import com.characterBuilder.util.properties.CharBuildProp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -36,6 +36,10 @@ public class UserMessageSrvcTest
 
 	@Autowired
 	UserSrvc userSrvc;
+	
+	@Autowired
+	CharBuildProp charProp;
+	
 
 	private User user3;
 	private User user4;
@@ -74,8 +78,8 @@ public class UserMessageSrvcTest
 		addAndVerify();
 		addAndVerify();
 
-		double overFlowFactor = PropertiesUtil.messageOverflowFactor();
-		int maxMsgCount = PropertiesUtil.messageCountMax();
+		double overFlowFactor = charProp.messageOverflowFactor();
+		int maxMsgCount = charProp.messageCountMax();
 		int maxMsgsAllowed = (int) (overFlowFactor * maxMsgCount);
 
 		assert (userMsgSrvc.getByUser(user3).size() <= maxMsgsAllowed);
@@ -140,8 +144,8 @@ public class UserMessageSrvcTest
 	private boolean verifyMostReasentSaved(User user)
 	{
 		
-		int max = PropertiesUtil.messageCountMax();
-		double overflowFactor = PropertiesUtil.messageOverflowFactor();
+		int max = charProp.messageCountMax();
+		double overflowFactor = charProp.messageOverflowFactor();
 		int threashHold = (int)((double)(max * overflowFactor) * .75);
 		List<UserMessage> allMsgs4 = userMsgSrvc.getByUser(user4);
 		
@@ -173,7 +177,7 @@ public class UserMessageSrvcTest
 
 	private ArrayList<UserMessage> addMax()
 	{
-		int max = PropertiesUtil.messageCountMax();
+		int max = charProp.messageCountMax();
 		return addMsgs(max);
 	}
 	

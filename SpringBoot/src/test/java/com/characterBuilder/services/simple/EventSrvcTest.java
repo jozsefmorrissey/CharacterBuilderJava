@@ -14,8 +14,8 @@ import com.characterBuilder.entities.Event;
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.EventImage;
 import com.characterBuilder.entities.pureDBEntities.EventTime;
-import com.characterBuilder.services.interfaces.EventSrvc;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.srvc.interfaces.EventSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest

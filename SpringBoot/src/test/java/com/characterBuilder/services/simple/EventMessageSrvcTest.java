@@ -17,14 +17,14 @@ import com.characterBuilder.entities.Event;
 import com.characterBuilder.entities.EventMessage;
 import com.characterBuilder.entities.User;
 import com.characterBuilder.markers.Message;
-import com.characterBuilder.repositories.EventMessageRepo;
-import com.characterBuilder.services.interfaces.EventMessageSrvc;
-import com.characterBuilder.services.interfaces.EventSrvc;
-import com.characterBuilder.services.interfaces.ParticipantSrvc;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.repo.EventMessageRepo;
+import com.characterBuilder.srvc.interfaces.EventMessageSrvc;
+import com.characterBuilder.srvc.interfaces.EventSrvc;
+import com.characterBuilder.srvc.interfaces.ParticipantSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
-import com.characterBuilder.util.PropertiesUtil;
 import com.characterBuilder.util.TestUtilities;
+import com.characterBuilder.util.properties.CharBuildProp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -44,6 +44,9 @@ public class EventMessageSrvcTest
 	
 	@Autowired
 	ParticipantSrvc partSrvc;
+	
+	@Autowired
+	CharBuildProp charProp;
 	
 	
 	User user1;
@@ -96,8 +99,8 @@ public class EventMessageSrvcTest
 	@Test
 	public void testCountControl()
 	{
-		double maxCount = (double)PropertiesUtil.eventMessageCountMax();
-		double overflowFactor = PropertiesUtil.eventMessageOverflowFactor();
+		double maxCount = (double)charProp.eventMessageCountMax();
+		double overflowFactor = charProp.eventMessageOverflowFactor();
 		int tolerance = (int)(maxCount * overflowFactor);
 
 		long count = eventMsgRepo.countByEventId(4l);
@@ -129,8 +132,8 @@ public class EventMessageSrvcTest
 	public void testDeleteOldMsgs() {
 		Event event = eventSrvc.getById(4);
 		
-		int max = PropertiesUtil.eventMessageCountMax();
-		double overflowFactor = PropertiesUtil.eventMessageOverflowFactor();
+		int max = charProp.eventMessageCountMax();
+		double overflowFactor = charProp.eventMessageOverflowFactor();
 		int threashHold = (int)((double)(max * overflowFactor) * .75);
 		List<EventMessage> allMsgs = eventMsgSrvc.getByUser(event.getPoster());
 		
@@ -147,7 +150,7 @@ public class EventMessageSrvcTest
 	
 	@Test
 	public void exceedLimitTest() {
-		int msgLengthMax = PropertiesUtil.eventMessageLengthMax();		
+		int msgLengthMax = charProp.eventMessageLengthMax();		
 		String msg = TestUtilities.getRandomString(msgLengthMax + 1);
 		try
 		{
@@ -183,14 +186,14 @@ public class EventMessageSrvcTest
 	
 	private ArrayList<EventMessage> addMax()
 	{
-		int max = PropertiesUtil.eventMessageCountMax();
+		int max = charProp.eventMessageCountMax();
 		return addMsgs(max);
 	}
 	
 	private ArrayList<EventMessage> addMsgs(int count)
 	{
 		ArrayList<EventMessage> msgs = new ArrayList<EventMessage>();
-		int msgLengthMax = PropertiesUtil.eventMessageLengthMax();		
+		int msgLengthMax = charProp.eventMessageLengthMax();		
 		
 		for(int i = 0; i < count; i++) {
 			String msg = TestUtilities.getRandomString(msgLengthMax);

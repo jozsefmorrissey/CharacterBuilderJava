@@ -16,12 +16,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.characterBuilder.entities.Participant;
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.EventTime;
-import com.characterBuilder.services.interfaces.ParticipantSrvc;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.srvc.interfaces.ParticipantSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 import com.characterBuilder.throwable.exceptions.AddingConflictingIds;
 import com.characterBuilder.throwable.exceptions.ExceedingLimitException;
 import com.characterBuilder.throwable.exceptions.ZeroIdException;
-import com.characterBuilder.util.PropertiesUtil;
+import com.characterBuilder.util.properties.CharBuildProp;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -32,6 +32,9 @@ public class ParticipantSrvcTest {
 	
 	@Autowired
 	private UserSrvc userSrvc;
+	
+	@Autowired
+	private CharBuildProp charProp;
 		
 	private User eventPoster;
 	private EventTime eventTime1;
@@ -201,7 +204,7 @@ public class ParticipantSrvcTest {
 		users.addAll(userSrvc.getAll());
 		users.remove(eventPoster);
 		Collections.shuffle(users);
-		int max = PropertiesUtil.participantMax();
+		int max = charProp.participantMax();
 		for(int index = 0; index < max; index++) {
 			this.participants.add(new Participant(2, users.get(index).getId()));
 		}

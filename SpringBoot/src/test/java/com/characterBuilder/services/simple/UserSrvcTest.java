@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.User;
 import com.characterBuilder.entities.pureDBEntities.Permission;
-import com.characterBuilder.services.interfaces.UserSrvc;
+import com.characterBuilder.srvc.interfaces.UserSrvc;
 import com.characterBuilder.throwable.exceptions.EmailAlreadyRegisteredException;
 
 @RunWith(SpringRunner.class)

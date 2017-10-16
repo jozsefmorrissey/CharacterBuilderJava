@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.characterBuilder.entities.pureDBEntities.Coordinate;
-import com.characterBuilder.services.interfaces.CoordinateSrvc;
+import com.characterBuilder.srvc.interfaces.CoordinateSrvc;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
